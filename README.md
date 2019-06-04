@@ -1,13 +1,13 @@
 # Unicron
 
 
-#### Unicron is an interactive utility application to help manage and edit background processes on macOS which are handled by the system's launchd process. 
+## Unicron is an interactive utility application to help manage and edit background processes on macOS. 
 
-##### These jobs are called daemons and agents and work on different user levels such as the current user, administrator or system. Unicron aims to handle background processes, strengthen security and simplify repeating tasks.
+### These jobs are called daemons and agents, which are handled by the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to handle background processes, strengthen security and simplify repeating tasks.
 
 
 
-##### BUILDING FROM SOURCE
+## Building from source
 
 The following modules have to be installed via pip:
 
@@ -20,7 +20,7 @@ Then you can start building the app:
 
 
 
-##### RUNNING THE INTERFACE IN DEBUG MODE:
+## Running the app in debug mode
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
 
@@ -28,7 +28,7 @@ The vanilla tools allow to run the app for testing without any compilation neede
 
 
 
-##### ROADMAP
+## Roadmap
 
 Currently working features are:
 
@@ -53,14 +53,15 @@ For future releases the following features are planned:
 
 
 
-##### DISCLAIMER
-
-Unicron is provided 'as is' without warranty of any kind. The provider makes no representations of any kind converning the safety, suitability, inaccuracies or other harmful dangers in the use of this software. There are inherent dangers in the use of any software and you are solely responsible for using the software and making changes to your system.
-
-
-
-##### BACKGROUND INFORMATION
+## Background information
 
 - https://docs.chef.io/resource_launchd.html
 - http://www.launchd.info
 - http://launched.zerowidth.com
+
+
+
+## Disclaimer
+
+#### Unicron is provided 'as is' without warranty of any kind. The provider makes no representations of any kind converning the safety, suitability, inaccuracies or other harmful dangers in the use of this software. There are inherent dangers in the use of any software and you are solely responsible for using the software and making changes to your system.
+
