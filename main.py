@@ -67,19 +67,27 @@ class Unicron(object):
         thisItem = {}
         image = None
         id = os.getuid()
+        warning = "You should not edit or remove existing system's daemons. These jobs are required for a working macOS system."
 
         if item != 'Active Daemons':
             if item == 'User Agents':
                 homedir = os.path.expanduser('~')
                 path = homedir + '/Library/LaunchAgents'
+                # If the folder doesn't exist in the user folder, create it
+                try:
+                    os.listdir(path)
+                except:
+                    os.mkdir(path)
             elif item == 'Global Agents':
                 path = '/Library/LaunchAgents'
             elif item == 'Global Daemons':
                 path = '/Library/LaunchDaemons'
             elif item == 'System Agents':
                 path = '/System/Library/LaunchAgents'
+                self._warning(self, warning)
             elif item == 'System Daemons':
                 path = '/System/Library/LaunchDaemons'
+                self._warning(self, warning)
 
             items = []
             files = os.listdir(path)
@@ -187,3 +195,20 @@ class Unicron(object):
 
         return items
 
+
+    def _warning(self, sender, warning):
+        self.warning = Window((450, 110), title="", closable=False, miniaturizable=False, fullSizeContentView=True)
+        self.warning.img = ImageView((10, 10, 50, 50))
+        self.warning.img.setImage(imageNamed=NSImageNameCaution)
+        self.warning.txt = TextBox((70, 10, -10, -40), "Warning\n"+warning)
+        self.warning.closeButton = Button((10, -30, -10, 20), "I understand", callback=self._closeWarning)
+        self.warning.setDefaultButton(self.warning.closeButton)
+        self.warning.center()
+        self.w.list.enable(False)
+        self.warning.open() 
+
+    
+    def _closeWarning(self, sender):
+        self.warning.close()
+        self.w.list.enable(True)
+        del self.warning
