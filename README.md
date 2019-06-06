@@ -1,9 +1,9 @@
 # Unicron
 
 
-## Unicron is an interactive utility application to help manage and edit background processes on macOS. 
+## Unicron is an interactive utility to help manage and edit background processes on macOS. 
 
-### These jobs are called daemons and agents, which are handled by the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to handle background processes, strengthen security and simplify repeating tasks.
+### These processes are called daemons, agents and jobs, or crons within the Unix world. Apple deprecated the Unix' crontab process in 10.4 and replaced it with the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to handle background processes, strengthen security and simplify repeating tasks.
 
 
 
@@ -16,6 +16,7 @@ The following modules have to be installed via pip:
 - launchd   (https://github.com/infothrill/python-launchd)
 
 Then you can start building the app:
+
 `$ python py2app setup.py -A`
 
 
@@ -32,24 +33,19 @@ The vanilla tools allow to run the app for testing without any compilation neede
 
 Currently working features are:
 
-- Grouping and listing daemons by user or system
-- Displaying the daemon's status
-- Loading and unloading daemons
-- Revealing the selected daemon in the Finder
+- [x] Grouping and listing daemons by user or system
+- [x] Displaying the daemon's status
+- [x] Loading and unloading daemons
+- [x] Revealing the selected daemon in the Finder
 
 For future releases the following features are planned:
 
-- Modifying existing daemons such as:
-
-  - Name and Label
-
-  - Program
-
-  - Scheduling
-
-  - Advanced settings
-
-- Creation of custom daemons
+- [ ] Modifying existing daemons such as:
+  - [ ] Name and Label
+  - [ ] Program
+  - [ ] Scheduling
+  - [ ] Advanced settings
+- [ ] Creation of custom daemons
 
 
 
