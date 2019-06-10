@@ -1,5 +1,7 @@
 # Unicron
 
+![Interface](ui.jpg)
+
 
 ## Unicron is an interactive utility to help manage and edit background processes on macOS. 
 
