@@ -1,6 +1,6 @@
 # Unicron
 
-![Interface](https://raw.githubusercontent.com/form-follows-function/unicron/master/.jpg)
+![Interface](https://raw.githubusercontent.com/form-follows-function/unicron/master/ui.png)
 
 
 ## Unicron is an interactive utility to help manage and edit background processes on macOS. 
