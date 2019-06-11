@@ -13,13 +13,13 @@
 
 The following modules have to be installed via pip:
 
-`$ pip install py2app    # https://py2app.readthedocs.io/en/latest/`
-`$ pip install launchd   # https://github.com/infothrill/python-launchd`
+- `$ pip install py2app    # https://py2app.readthedocs.io/en/latest/`
+- `$ pip install launchd   # https://github.com/infothrill/python-launchd`
 
 
 The vanilla framework requires to be downloaded from GitHub (https://github.com/typesupply/vanilla). Locate the unzipped Folder and install it via:
 
-`$ python setup.py install`  
+- `$ python setup.py install`  
 
 
 Then you can start building the app:
