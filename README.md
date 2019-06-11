@@ -5,7 +5,7 @@
 
 ## Unicron is an interactive utility to help manage and edit background processes on macOS. 
 
-### These processes are called daemons, agents and jobs, or crons within the Unix world. Apple deprecated the Unix' crontab process in 10.4 and replaced it with the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to handle background processes, strengthen security and simplify repeating tasks.
+### These processes are called daemons, agents and jobs, or crons within the Unix world. Apple deprecated the Unix' crontab process in 10.4 and replaced it with the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to handle background processes, strengthens security and simplifies repeating tasks.
 
 
 
@@ -13,9 +13,14 @@
 
 The following modules have to be installed via pip:
 
-- py2app    (https://py2app.readthedocs.io/en/latest/)
-- vanilla   (https://github.com/typesupply/vanilla)
-- launchd   (https://github.com/infothrill/python-launchd)
+`$ pip install py2app    # https://py2app.readthedocs.io/en/latest/`
+`$ pip install launchd   # https://github.com/infothrill/python-launchd`
+
+
+The vanilla framework requires to be downloaded from GitHub (https://github.com/typesupply/vanilla). Locate the unzipped Folder and install it via:
+
+`$ python setup.py install`  
+
 
 Then you can start building the app:
 
