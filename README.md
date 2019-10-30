@@ -18,19 +18,15 @@ The following modules have to be installed via pip:
 - `$ pip install py2app    # https://py2app.readthedocs.io/en/latest/`
 - `$ pip install launchd   # https://github.com/infothrill/python-launchd`
 
-Additionally download the vanilla framework (https://github.com/robotools/vanilla) and install it via:
+Additionally download the vanilla framework requires to be downloaded and installed it via:
+`$ git clone https://github.com/robotools/vanilla`
+`$ cd vanilla`
 `$ python setup.py install`
- 
-
-The vanilla framework requires to be downloaded from GitHub (https://github.com/typesupply/vanilla). Locate the unzipped Folder and install it via:
-
-- `$ python setup.py install`  
-
+(You might need sudo privileges to install the framework)
 
 Then you can start building the app:
 
 `$ python py2app setup.py -A`
-
 
 
 ## Running the app in debug mode
