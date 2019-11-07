@@ -13,7 +13,6 @@
 
 The following modules have to be installed via pip:
 
-- `$ pip install AppKit    # https://github.com/nitipit/appkit`
 - `$ pip install pyobjc    # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
 - `$ pip install py2app    # https://py2app.readthedocs.io/en/latest/`
 - `$ pip install launchd   # https://github.com/infothrill/python-launchd`
