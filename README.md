@@ -11,28 +11,30 @@
 
 ## Building from source
 
-The following modules have to be installed via pip:
+### Requirements
 
-- `$ pip install AppKit    # https://github.com/nitipit/appkit`
-- `$ pip install pyobjc    # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
-- `$ pip install py2app    # https://py2app.readthedocs.io/en/latest/`
-- `$ pip install launchd   # https://github.com/infothrill/python-launchd`
+##### Easy Installation:
+$ `pip install -r requirements.txt`
 
-Additionally download the vanilla framework requires to be downloaded and installed it via:
-`$ git clone https://github.com/robotools/vanilla`
-`$ cd vanilla`
+##### Manual Installation:
+$ `pip install pyobjc   # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
+
+`pip install py2app   # https://py2app.readthedocs.io/en/latest/`
+
+`pip install launchd  # https://github.com/infothrill/python-launchd`
+
+
+Additionally download the vanilla framework (https://github.com/robotools/vanilla) and install it via:
 `$ python setup.py install`
-(You might need sudo privileges to install the framework)
+
 
 Then you can start building the app:
-
-`$ python py2app setup.py -A`
+ `$ python py2app setup.py -A`
 
 
 ## Running the app in debug mode
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
-
 `$ python debug.py`
 
 
@@ -62,7 +64,6 @@ For future releases the following features are planned:
 - https://docs.chef.io/resource_launchd.html
 - http://www.launchd.info
 - http://launched.zerowidth.com
-
 
 
 ## Disclaimer

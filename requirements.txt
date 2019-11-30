@@ -1,0 +1,3 @@
+pyobjc>=5.3
+py2app>=0.19
+launchd>=0.1.1
