@@ -16,6 +16,7 @@
 ##### Easy Installation:
 $ `pip install -r requirements.txt`
 
+
 ##### Manual Installation:
 $ `pip install pyobjc   # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
 
