@@ -24,9 +24,9 @@ class Unicron(object):
         self.w.blend = Group((0, 0, 0, 0), blendingMode='behindWindow')
 
         self.w.pathList = PopUpButton(
-            (8, 25, -55, 20), self.locations, callback=self.populateList)
+            (8, 25, -33, 20), self.locations, callback=self.populateList)
 
-        self.w.refresh = ImageButton((-55, 25, -25, 20), bordered=False, imageNamed=NSImageNameRefreshTemplate, callback=self.populateList)
+        self.w.refresh = ImageButton((-30, 25, -5, 20), bordered=False, imageNamed=NSImageNameRefreshTemplate, callback=self.populateList)
 
         self.listColumnDescriptions = [
             {'title': '', 'key': 'image', 'width': 25, 'typingSensitive': True, 'allowsSorting': True, 'cell': ImageListCell()}, {'title': 'Name', 'key': 'name', 'typingSensitive': True, 'allowsSorting': True, }
