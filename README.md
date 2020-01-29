@@ -42,16 +42,12 @@ The vanilla tools allow to run the app for testing without any compilation neede
 
 ## Roadmap
 
-Currently working features are:
-
 - [x] Grouping and listing daemons by user or system
 - [x] Displaying the daemon's status
 - [x] Loading and unloading daemons
 - [x] Revealing the selected daemon in the Finder
-
-For future releases the following features are planned:
-
 - [ ] Refactor the code to use QT as GUI library
+- [ ] Providing builds(no GitHub CI/CD) with md5 checksum
 - [ ] Modifying existing daemons such as:
   - [ ] Name and Label
   - [ ] Program
