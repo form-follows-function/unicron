@@ -47,7 +47,7 @@ The vanilla tools allow to run the app for testing without any compilation neede
 - [x] Loading and unloading daemons
 - [x] Revealing the selected daemon in the Finder
 - [ ] Refactor the code to use QT as GUI library
-- [ ] Providing builds(no GitHub CI/CD) with md5 checksum
+- [ ] Providing builds (no GitHub CI/CD) with md5 checksum
 - [ ] Modifying existing daemons such as:
   - [ ] Name and Label
   - [ ] Program
