@@ -51,12 +51,14 @@ Currently working features are:
 
 For future releases the following features are planned:
 
+- [ ] Refactor the code to use QT as GUI library
 - [ ] Modifying existing daemons such as:
   - [ ] Name and Label
   - [ ] Program
   - [ ] Scheduling
   - [ ] Advanced settings
 - [ ] Creation of custom daemons
+- [ ] UX improvements
 
 
 
