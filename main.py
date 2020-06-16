@@ -130,11 +130,13 @@ class Unicron(object):
         if bool(launchd.LaunchdJob(name).exists()):
             try:
                 subprocess.call(['launchctl', 'unload', '%s' % path], cwd='/', shell=False, universal_newlines=False)
+                self.populateList(self)
             except:
                 return
         else:
             try:
                 subprocess.call(['launchctl', 'load', '%s' % path], cwd='/', shell=False, universal_newlines=False)
+                self.populateList(self)
             except:
                 return
                 
