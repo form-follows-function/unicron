@@ -57,6 +57,8 @@ The vanilla tools allow to run the app for testing without any compilation neede
 - [ ] Creation of custom daemons
 - [ ] UX improvements
 
+##### Deprecated
+- [x] ~~Refactor the code to use QT as GUI library~~
 
 
 ## Background information
