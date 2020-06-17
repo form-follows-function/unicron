@@ -199,6 +199,7 @@ class Unicron(object):
 
         items = [
             dict(title=load, callback=self._loadUnloadDaemon),
+            dict(title="Refresh list", callback=self.populateList),
             dict(title="Show in Finder", callback=self._showInFinder)
         ]
 
