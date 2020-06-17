@@ -20,23 +20,23 @@ $ `pip install -r requirements.txt`
 ##### Manual Installation:
 $ `pip install pyobjc   # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
 
-`pip install py2app   # https://py2app.readthedocs.io/en/latest/`
+$ `pip install py2app   # https://py2app.readthedocs.io/en/latest/`
 
-`pip install launchd  # https://github.com/infothrill/python-launchd`
+$ `pip install launchd  # https://github.com/infothrill/python-launchd`
 
 
 Additionally download the vanilla framework (https://github.com/robotools/vanilla) and install it via:
-`$ python setup.py install`
+$ `$ python setup.py install`
 
 
 Then you can start building the app:
- `$ python py2app setup.py -A`
+$  `$ python py2app setup.py -A`
 
 
 ## Running the app in debug mode
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
-`$ python debug.py`
+$ `$ python debug.py`
 
 
 
