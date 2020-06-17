@@ -48,7 +48,6 @@ The vanilla tools allow to run the app for testing without any compilation neede
 - [x] Revealing the selected daemon in the Finder
 - [ ] Displaying an application icon
    - [ ] Easteregg
-- [ ] Refactor the code to use QT as GUI library
 - [ ] Providing builds (no GitHub CI/CD) with md5 checksum
 - [ ] Modifying existing daemons such as:
   - [ ] Name and Label
