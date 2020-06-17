@@ -19,20 +19,27 @@ class Unicron(object):
 
         # WINDOW SETUP
         self.w = Window((250, 400), 'Unicron',
-                        closable=True, fullSizeContentView=True, minSize=(200, 320), maxSize=(600, 1200))
-                        
+                        closable=True, fullSizeContentView=True, titleVisible=False, minSize=(160, 320), maxSize=(600, 1200))
+
+        self.pathList = NSPopUpButton.alloc().initWithFrame_(((0, 0), (160, 20)))
+        self.pathList.addItemsWithTitles_(self.locations)
+
+        toolbarItems = [
+            {"itemIdentifier": "Daemons",
+             "label": "Daemons",
+             "toolTip": "Location of daemons",
+             "view": self.pathList,
+             "callback": self.populateList},
+        ]
+        self.w.addToolbar("Vanilla Test Toolbar", toolbarItems=toolbarItems, displayMode="label")
+
         self.w.blend = Group((0, 0, 0, 0), blendingMode='behindWindow')
-
-        self.w.pathList = PopUpButton(
-            (8, 25, -33, 20), self.locations, callback=self.populateList)
-
-        self.w.refresh = ImageButton((-30, 25, -5, 20), bordered=False, imageNamed=NSImageNameRefreshTemplate, callback=self.populateList)
 
         self.listColumnDescriptions = [
             {'title': '', 'key': 'image', 'width': 25, 'typingSensitive': True, 'allowsSorting': True, 'cell': ImageListCell()}, {'title': 'Name', 'key': 'name', 'typingSensitive': True, 'allowsSorting': True, }
         ]
         self.rowHeight = 20
-        self.w.list = List((0, 55, -0, 0), items=self.listItems,
+        self.w.list = List((0, 37, -0, 0), items=self.listItems,
                            columnDescriptions=self.listColumnDescriptions,
                            showColumnTitles=True,
                            allowsEmptySelection=True,
@@ -59,7 +66,7 @@ class Unicron(object):
     def populateList(self, sender):
         self.selected.clear()
         self.w.list._removeSelection()
-        item = self.w.pathList.getItem()
+        item = self.pathList.titleOfSelectedItem()
 
         for i in range(len(self.w.list)):
             del self.w.list[0]
@@ -153,7 +160,7 @@ class Unicron(object):
                 self.selected['name'] = job['name']
                 
                 # Get job path and file location
-                item = self.w.pathList.getItem()
+                item = self.pathList.titleOfSelectedItem()
 
                 if 'User' in item:
                     import getpass
@@ -192,6 +199,7 @@ class Unicron(object):
 
         items = [
             dict(title=load, callback=self._loadUnloadDaemon),
+            dict(title="Refresh list", callback=self.populateList),
             dict(title="Show in Finder", callback=self._showInFinder)
         ]
 
