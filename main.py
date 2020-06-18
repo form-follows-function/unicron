@@ -26,11 +26,11 @@ class Unicron(object):
         toolbarItems = [
             {"itemIdentifier": "Daemons",
              "label": "Daemons",
-             "toolTip": "Location of daemons",
+             "toolTip": "Daemon Group",
              "view": self.pathList,
              "callback": self.populateList},
         ]
-        self.w.addToolbar("Vanilla Test Toolbar", toolbarItems=toolbarItems, displayMode="label")
+        self.w.addToolbar("Unicron Toolbar", toolbarItems=toolbarItems, displayMode="icon")
 
         self.w.blend = Group((0, 0, 0, 0), blendingMode='behindWindow')
 
