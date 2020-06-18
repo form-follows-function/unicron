@@ -17,6 +17,7 @@
 $ `pip install -r requirements.txt`
 
 
+
 ##### Manual Installation:
 $ `pip install pyobjc   # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
 
@@ -24,13 +25,19 @@ $ `pip install py2app   # https://py2app.readthedocs.io/en/latest/`
 
 $ `pip install launchd  # https://github.com/infothrill/python-launchd`
 
-
 Additionally download the vanilla framework (https://github.com/robotools/vanilla) and install it via:
-$ `$ python setup.py install`
+$ `git clone https://github.com/robotools/vanilla.git`
+$ `cd vanilla && python setup.py install`
 
 
-Then you can start building the app:
+
+## Building
+Building the app in Alias-mode allows you to keep a development environment:
 $  `$ python py2app setup.py -A`
+
+For deploys use the build command without the `-A` "Alias" parameter:
+$  `$ python py2app setup.py`
+
 
 
 ## Running the app in debug mode
@@ -46,6 +53,7 @@ $ `$ python debug.py`
 - [x] Displaying the daemon's status
 - [x] Loading and unloading daemons
 - [x] Revealing the selected daemon in the Finder
+- [x] Removing Daemons from recurring services
 - [ ] Displaying an application icon
    - [ ] Easteregg
 - [ ] Providing builds (no GitHub CI/CD) with md5 checksum
@@ -55,10 +63,11 @@ $ `$ python debug.py`
   - [ ] Scheduling
   - [ ] Advanced settings
 - [ ] Creation of custom daemons
-- [ ] UX improvements
+- [ ] UX improvements (ongoing)
 
 ##### Deprecated
 - [x] ~~Refactor the code to use QT as GUI library~~
+
 
 
 ## Background information
@@ -66,6 +75,7 @@ $ `$ python debug.py`
 - https://docs.chef.io/resource_launchd.html
 - http://www.launchd.info
 - http://launched.zerowidth.com
+
 
 
 ## Disclaimer
