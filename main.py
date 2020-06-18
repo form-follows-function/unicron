@@ -147,6 +147,20 @@ class Unicron(object):
                 return
                 
 
+    def _removeDaemon(self, sender):
+        self.w.list.scrollToSelection()
+        name = self.selected['name']
+        path = self.selected['file']
+
+        if bool(launchd.LaunchdJob(name).exists()):
+            try:
+                subprocess.call(['launchctl', 'unload', '%s' % path], cwd='/', shell=False, universal_newlines=False)
+                subprocess.call(['launchctl', 'remove', '%s' % path], cwd='/', shell=False, universal_newlines=False)
+                self.populateList(self)
+            except:
+                return
+
+
     def _selectionCallback(self, sender):
         try:
             if not self.w.list.getSelection():
@@ -191,16 +205,17 @@ class Unicron(object):
    
 
     def _menuCallback(self, sender):
+        items = []
         if self.selected['status'] == None:
             load = 'Load'
+            items.append(dict(title=load, callback=self._loadUnloadDaemon))
         else:
             load = 'Unload'
+            items.append(dict(title=load, callback=self._loadUnloadDaemon))
+            items.append(dict(title="Remove", callback=self._removeDaemon))
 
-        items = [
-            dict(title=load, callback=self._loadUnloadDaemon),
-            dict(title="Refresh list", callback=self.populateList),
-            dict(title="Show in Finder", callback=self._showInFinder)
-        ]
+        items.append(dict(title="Refresh list", callback=self.populateList))
+        items.append(dict(title="Show in Finder", callback=self._showInFinder))
 
         return items
 
