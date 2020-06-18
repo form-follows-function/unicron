@@ -46,6 +46,7 @@ $ `$ python debug.py`
 - [x] Displaying the daemon's status
 - [x] Loading and unloading daemons
 - [x] Revealing the selected daemon in the Finder
+- [x] Removing Daemons from recurring services
 - [ ] Displaying an application icon
    - [ ] Easteregg
 - [ ] Providing builds (no GitHub CI/CD) with md5 checksum
@@ -55,7 +56,7 @@ $ `$ python debug.py`
   - [ ] Scheduling
   - [ ] Advanced settings
 - [ ] Creation of custom daemons
-- [ ] UX improvements
+- [ ] UX improvements (ongoing)
 
 ##### Deprecated
 - [x] ~~Refactor the code to use QT as GUI library~~
