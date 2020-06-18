@@ -1,8 +1,9 @@
-from __future__ import print_function
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from AppKit import NSObject
 from PyObjCTools import AppHelper
-from main import *
+from main import Unicron
 
 
 class UnicronAppDelegate(NSObject):
