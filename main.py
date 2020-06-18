@@ -5,8 +5,8 @@ from __future__ import print_function
 
 import math, os, subprocess, launchd
 from PyObjCTools import AppHelper
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox
 
 
 class Unicron(object):
