@@ -17,6 +17,7 @@
 $ `pip install -r requirements.txt`
 
 
+
 ##### Manual Installation:
 $ `pip install pyobjc   # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
 
@@ -62,11 +63,13 @@ $ `$ python debug.py`
 - [x] ~~Refactor the code to use QT as GUI library~~
 
 
+
 ## Background information
 
 - https://docs.chef.io/resource_launchd.html
 - http://www.launchd.info
 - http://launched.zerowidth.com
+
 
 
 ## Disclaimer
