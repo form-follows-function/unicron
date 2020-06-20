@@ -25,17 +25,23 @@ $ `pip install py2app   # https://py2app.readthedocs.io/en/latest/`
 
 $ `pip install launchd  # https://github.com/infothrill/python-launchd`
 
+
 Additionally download the vanilla framework (https://github.com/robotools/vanilla) and install it via:
+
 $ `git clone https://github.com/robotools/vanilla.git`
+
 $ `cd vanilla && python setup.py install`
 
 
 
 ## Building
 Building the app in Alias-mode allows you to keep a development environment:
+
 $  `$ python py2app setup.py -A`
 
+
 For deploys use the build command without the `-A` "Alias" parameter:
+
 $  `$ python py2app setup.py`
 
 
@@ -43,6 +49,7 @@ $  `$ python py2app setup.py`
 ## Running the app in debug mode
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
+
 $ `$ python debug.py`
 
 
