@@ -15,5 +15,5 @@ dataFiles = [
 
 setup(
     data_files=dataFiles,
-    app=[dict(script="Unicron.py", plist=plist)]
+    app=[dict(script="app.py", plist=plist)]
 )
