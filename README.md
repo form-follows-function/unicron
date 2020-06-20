@@ -14,16 +14,16 @@
 ### Requirements
 
 ##### Easy Installation:
-$ `pip install -r requirements.txt`
+$ `pip3 install -r requirements.txt`
 
 
 
 ##### Manual Installation:
-$ `pip install pyobjc   # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
+$ `pip3 install pyobjc   # https://bitbucket.org/ronaldoussoren/pyobjc/src/default/`
 
-$ `pip install py2app   # https://py2app.readthedocs.io/en/latest/`
+$ `pip3 install py2app   # https://py2app.readthedocs.io/en/latest/`
 
-$ `pip install launchd  # https://github.com/infothrill/python-launchd`
+$ `pip3 install launchd  # https://github.com/infothrill/python-launchd`
 
 
 Additionally download the vanilla framework (https://github.com/robotools/vanilla) and install it via:
@@ -33,16 +33,20 @@ $ `git clone https://github.com/robotools/vanilla.git`
 $ `cd vanilla && python setup.py install`
 
 
+For deploys Apple's Xcode command line developer tools are required too, which can be installed with:
 
-## Building
+$ `xcode-select --install` # Xcode command line developer tools
+
+
+## Building and deploying
 Building the app in Alias-mode allows you to keep a development environment:
 
-$  `python setup.py py2app -A`
+$  `python3 setup.py py2app -A`
 
 
 For deploys use the build command without the `-A` "Alias" parameter:
 
-$  `python setup.py py2app`
+$  `python3 setup.py py2app`
 
 
 
@@ -50,7 +54,7 @@ $  `python setup.py py2app`
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
 
-$ `python debug.py`
+$ `python3 debug.py`
 
 
 
