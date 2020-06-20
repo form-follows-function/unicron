@@ -6,7 +6,9 @@ from PyObjCTools import AppHelper
 from main import Unicron
 
 class UnicronController(NSWindowController):
-    Unicron()
+    def windowDidLoad(self):
+        NSWindowController.windowDidLoad(self)
+        Unicron()
         
 if __name__ == "__main__":
     app = NSApplication.sharedApplication()
