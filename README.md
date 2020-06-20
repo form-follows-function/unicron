@@ -33,16 +33,20 @@ $ `git clone https://github.com/robotools/vanilla.git`
 $ `cd vanilla && python setup.py install`
 
 
+For deploys Apple's Xcode command line developer tools are required too, which can be installed with:
 
-## Building
+$ `xcode-select --install` # Xcode command line developer tools
+
+
+## Building and deploying
 Building the app in Alias-mode allows you to keep a development environment:
 
-$  `python setup.py py2app -A`
+$  `python3 setup.py py2app -A`
 
 
 For deploys use the build command without the `-A` "Alias" parameter:
 
-$  `python setup.py py2app`
+$  `python3 setup.py py2app`
 
 
 
