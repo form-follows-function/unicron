@@ -37,12 +37,12 @@ $ `cd vanilla && python setup.py install`
 ## Building
 Building the app in Alias-mode allows you to keep a development environment:
 
-$  `$ python py2app setup.py -A`
+$  `python py2app setup.py -A`
 
 
 For deploys use the build command without the `-A` "Alias" parameter:
 
-$  `$ python py2app setup.py`
+$  `python py2app setup.py`
 
 
 
@@ -50,7 +50,7 @@ $  `$ python py2app setup.py`
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
 
-$ `$ python debug.py`
+$ `python debug.py`
 
 
 
