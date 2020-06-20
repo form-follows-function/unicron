@@ -3,7 +3,8 @@
 
 from __future__ import print_function
 
-import math, os, subprocess, launchd
+import math, os, subprocess, launchd, plistlib
+from functools import partial
 from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution
 from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox
 
@@ -15,6 +16,19 @@ class Unicron(object):
         self.listItems = []
         self.selected = {}
         self.daemon = None
+
+        # Preferences
+        self.homedir = os.path.expanduser('~')
+        self.prefsFolder = self.homedir + "/Library/Preferences/"
+        self.prefsFile = "de.nelsonfritsch.unicron.plist"
+
+        if os.path.isfile(self.prefsFolder + self.prefsFile):
+            self.prefs = self._loadPrefs(self)
+        else:
+            self.prefs = dict(
+                showSystemWarning = True,
+            )
+            self._savePrefs(self)
 
         # WINDOW SETUP
         self.w = Window((250, 400), 'Unicron',
@@ -73,7 +87,7 @@ class Unicron(object):
         thisItem = {}
         image = None
         id = os.getuid()
-        warning = "You should not edit or remove existing system's daemons. These jobs are required for a working macOS system."
+        systemWarning = "You should not edit or remove existing system's daemons. These jobs are required for a working macOS system."
 
         if item != 'Active Daemons':
             if item == 'User Agents':
@@ -90,10 +104,10 @@ class Unicron(object):
                 path = '/Library/LaunchDaemons'
             elif item == 'System Agents':
                 path = '/System/Library/LaunchAgents'
-                self._warning(self, warning)
+                self._warning(self, systemWarning, "showSystemWarning")
             elif item == 'System Daemons':
                 path = '/System/Library/LaunchDaemons'
-                self._warning(self, warning)
+                self._warning(self, systemWarning, "showSystemWarning")
 
             items = []
             files = os.listdir(path)
@@ -220,16 +234,37 @@ class Unicron(object):
         return items
 
 
-    def _warning(self, sender, warning):
-        self.warning = Window((450, 110), title="", closable=False, miniaturizable=False, fullSizeContentView=True)
-        self.warning.img = ImageView((10, 10, 50, 50))
-        self.warning.img.setImage(imageNamed=NSImageNameCaution)
-        self.warning.txt = TextBox((70, 10, -10, -40), "Warning\n"+warning)
-        self.warning.closeButton = Button((10, -30, -10, 20), "I understand", callback=self._closeWarning)
-        self.warning.setDefaultButton(self.warning.closeButton)
-        self.warning.center()
-        self.w.list.enable(False)
-        self.warning.open() 
+    def _loadPrefs(self, sender):
+        with open(self.prefsFolder + self.prefsFile, 'rb') as fp:
+            self.prefs = plistlib.load(fp)
+        return self.prefs
+
+
+    def _savePrefs(self, sender):
+        with open(self.prefsFolder + self.prefsFile, 'wb') as fp:
+            plistlib.dump(self.prefs, fp)
+
+
+    def _changePref(self, sender, key, value):
+        self.prefs[key] = value
+        self._savePrefs(self)
+
+
+    def _warning(self, sender, warning, prefKey):
+        if self.prefs.get(prefKey):
+            self.warning = Sheet((400, 140), self.w)
+            self.warning.img = ImageView((10, 10, 60, 60))
+            self.warning.img.setImage(imageNamed=NSImageNameCaution)
+            self.warning.txt = TextBox((70, 10, -10, -40), "Warning\n"+warning)
+
+            callback = partial(self._changePref, key=prefKey, value=not self.prefs.get(prefKey))
+            self.warning.check = CheckBox((70, 80, -10, 20), "Always show this warning", value=self.prefs.get(prefKey), callback=callback)
+
+            self.warning.closeButton = Button((10, 110, -10, 20), "I understand", callback=self._closeWarning)
+            self.warning.setDefaultButton(self.warning.closeButton)
+            self.warning.center()
+            self.w.list.enable(False)
+            self.warning.open()
 
     
     def _closeWarning(self, sender):
