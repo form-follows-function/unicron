@@ -5,7 +5,8 @@ from __future__ import print_function
 
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSAppearance
+from Foundation import NSUserDefaults
 from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox
 
 
@@ -72,6 +73,10 @@ class Unicron(object):
         self.populateList(self)
 
         self.w.rowIndicator = Group((0, 0, 0, 10))
+
+        if NSUserDefaults.standardUserDefaults().stringForKey_('AppleInterfaceStyle') == 'Dark':                
+            appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantDark')
+            self.w._window.setAppearance_(appearance)
 
         self.w.open()
 
