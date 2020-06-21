@@ -82,7 +82,6 @@ class Unicron(object):
         
         self.w.counter = TextBox((16, -20, -16, 15), '', alignment='center', sizeStyle='small')
         self.populateList(self)
-        print(self.prefsWindow.style.get())
         self.w.rowIndicator = Group((0, 0, 0, 10))
 
         self.w.bind('move', self.windowMoved)
@@ -269,8 +268,8 @@ class Unicron(object):
             items.append(dict(title=load, callback=self._loadUnloadDaemon))
             items.append(dict(title="Remove", callback=self._removeDaemon))
 
-        items.append(dict(title="Refresh list", callback=self.populateList))
         items.append(dict(title="Show in Finder", callback=self._showInFinder))
+        items.append(dict(title="Refresh list", callback=self.populateList))
 
         return items
 
