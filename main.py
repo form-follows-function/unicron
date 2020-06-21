@@ -28,6 +28,7 @@ class Unicron(object):
         else:
             self.prefs = dict(
                 showSystemWarning = True,
+                windowPosSize = (100.0, 100.0, 250.0, 400.0),
             )
             self._savePrefs(self)
 
@@ -78,7 +79,13 @@ class Unicron(object):
             appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantDark')
             self.w._window.setAppearance_(appearance)
 
+        self.w.bind('move', self.windowMoved)
+        self.w.bind('resize', self.windowMoved)
+        self.w.setPosSize(self.prefs.get('windowPosSize'))
         self.w.open()
+
+    def windowMoved(self, sender):
+        self._changePref(self, 'windowPosSize', self.w.getPosSize())
 
 
     def populateList(self, sender):
