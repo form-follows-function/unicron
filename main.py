@@ -154,9 +154,7 @@ class Unicron(object):
             count = 0
 
             for file in files:
-                if not '.plist' in file:
-                    files.remove(file)
-                else:
+                if file.endswith('.plist'):
                     file = file.replace('.plist', '')
                     try:
                         pid = launchd.LaunchdJob(file).pid
