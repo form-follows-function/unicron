@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from Cocoa import objc
-from AppKit import NSApplication, NSApp, NSWindowController
+from AppKit import NSApplication, NSWindowController
 from PyObjCTools import AppHelper
 from main import Unicron
 
@@ -24,6 +24,6 @@ if __name__ == "__main__":
     app = NSApplication.sharedApplication()
     viewController = UnicronController.alloc().initWithWindowNibName_("MainMenu")
     viewController.showWindow_(viewController)
-    NSApp.activateIgnoringOtherApps_(True)
+    app.activateIgnoringOtherApps_(True)
     
     AppHelper.runEventLoop()
