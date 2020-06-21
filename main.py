@@ -7,7 +7,7 @@ import math, os, subprocess, launchd, plistlib
 from functools import partial
 from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSAppearance
 from Foundation import NSUserDefaults
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton
 
 
 class Unicron(object):
@@ -29,10 +29,20 @@ class Unicron(object):
             self.prefs = dict(
                 showSystemWarning = True,
                 windowPosSize = (100.0, 100.0, 250.0, 400.0),
+                windowStyle = 'System'
             )
             self._savePrefs(self)
 
-        # WINDOW SETUP
+        # Preferences Window
+        self.prefsWindow = Window((300, 105), 'Preferences')
+
+        self.styles = ['System', 'Light', 'Dark']
+        self.prefsWindow.styleTxt = TextBox((10, 10, -10, 20), "Window Style:")
+        self.prefsWindow.style = PopUpButton((30, 35, -10, 20), self.styles, callback=self.prefsSetStyle)
+
+        self.prefsWindow.restore = Button((10, 75, -10, 20), 'Restore Warnings', callback=self.prefsRestoreWarnings)
+
+        # Main Window
         self.w = Window((250, 400), 'Unicron',
                         closable=True, fullSizeContentView=True, titleVisible=False, minSize=(160, 320), maxSize=(600, 1200))
 
@@ -72,17 +82,36 @@ class Unicron(object):
         
         self.w.counter = TextBox((16, -20, -16, 15), '', alignment='center', sizeStyle='small')
         self.populateList(self)
-
+        print(self.prefsWindow.style.get())
         self.w.rowIndicator = Group((0, 0, 0, 10))
-
-        if NSUserDefaults.standardUserDefaults().stringForKey_('AppleInterfaceStyle') == 'Dark':                
-            appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantDark')
-            self.w._window.setAppearance_(appearance)
 
         self.w.bind('move', self.windowMoved)
         self.w.bind('resize', self.windowMoved)
         self.w.setPosSize(self.prefs.get('windowPosSize'))
+
+        self.prefsSetStyle(self)
+        
         self.w.open()
+
+
+    def prefsSetStyle(self, sender):
+        style = self.prefsWindow.style.getItem()
+        self._changePref(self, 'windowStyle', style)
+
+        # if self.prefs.get('windowStyle'):
+        if style == 'System':
+            style = NSUserDefaults.standardUserDefaults().stringForKey_('AppleInterfaceStyle')
+        if style == 'Dark':                
+            appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantDark')
+        else:
+            appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantLight')
+        self.w._window.setAppearance_(appearance)
+        self.prefsWindow._window.setAppearance_(appearance)
+
+
+    def prefsRestoreWarnings(self, sender):
+        self._changePref(self, 'showSystemWarning', True)
+
 
     def windowMoved(self, sender):
         self._changePref(self, 'windowPosSize', self.w.getPosSize())
