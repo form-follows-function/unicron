@@ -269,8 +269,8 @@ class Unicron(object):
             items.append(dict(title=load, callback=self._loadUnloadDaemon))
             items.append(dict(title="Remove", callback=self._removeDaemon))
 
-        items.append(dict(title="Refresh list", callback=self.populateList))
         items.append(dict(title="Show in Finder", callback=self._showInFinder))
+        items.append(dict(title="Refresh list", callback=self.populateList))
 
         return items
 
