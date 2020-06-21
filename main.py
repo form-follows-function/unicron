@@ -82,7 +82,6 @@ class Unicron(object):
         
         self.w.counter = TextBox((16, -20, -16, 15), '', alignment='center', sizeStyle='small')
         self.populateList(self)
-        print(self.prefsWindow.style.get())
         self.w.rowIndicator = Group((0, 0, 0, 10))
 
         self.w.bind('move', self.windowMoved)
