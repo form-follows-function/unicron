@@ -74,7 +74,7 @@ $ `python3 debug.py`
   - [ ] Scheduling
   - [ ] Advanced settings
 - [ ] Creation of custom daemons
-- [ ] UX improvements (ongoing)
+- [x] UX improvements (ongoing)
 
 ##### Deprecated
 - [x] ~~Refactor the code to use QT as GUI library~~
