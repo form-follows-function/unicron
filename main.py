@@ -103,7 +103,7 @@ class Unicron(object):
             winAppearance = 'NSAppearanceNameVibrantDark'
         else:
             winAppearance = 'NSAppearanceNameVibrantLight'
-        self.w._window.setAppearance_(winAppearance)
+        self.w._window.setAppearance_(NSAppearance.appearanceNamed_(winAppearance))
         self.prefsWindow._window.setAppearance_(winAppearance)
 
 
