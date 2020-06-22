@@ -97,15 +97,14 @@ class Unicron(object):
         style = self.prefsWindow.style.getItem()
         self._changePref(self, 'windowStyle', style)
 
-        # if self.prefs.get('windowStyle'):
         if style == 'System':
             style = NSUserDefaults.standardUserDefaults().stringForKey_('AppleInterfaceStyle')
-        if style == 'Dark':                
-            appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantDark')
+        if style == 'Dark':
+            winAppearance = 'NSAppearanceNameVibrantDark'
         else:
-            appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantLight')
-        self.w._window.setAppearance_(appearance)
-        self.prefsWindow._window.setAppearance_(appearance)
+            winAppearance = 'NSAppearanceNameVibrantLight'
+        self.w._window.setAppearance_(NSAppearance.appearanceNamed_(winAppearance))
+        self.prefsWindow._window.setAppearance_(winAppearance)
 
 
     def prefsRestoreWarnings(self, sender):
