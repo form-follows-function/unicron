@@ -253,7 +253,6 @@ class Unicron(object):
             load, able = 'Load', 'Enable'
         else:
             load, able = 'Unload', 'Disable'
-            items.append(dict(title="Remove", callback=self._removeDaemon))
 
         loadCallback = partial(self._loadUnloadDaemon, command=load)
         ableCallback = partial(self._loadUnloadDaemon, command=able)
