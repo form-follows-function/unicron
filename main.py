@@ -231,7 +231,7 @@ class Unicron(object):
                     import getpass
                     username = getpass.getuser()
                     user = username
-                    path = 'Users/%s/Library/Launch' % username
+                    path = '/Users/%s/Library/Launch' % username
                 elif 'Global' in item:
                     user = 'All users'
                     path = '/Library/Launch'
