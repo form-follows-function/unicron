@@ -179,7 +179,7 @@ class Unicron(object):
                         shell=False, universal_newlines=False)
 
 
-    def _loadUnloadDaemon(self, sender):
+    def _loadUnloadDaemon(self, sender, command):
         self.w.list.scrollToSelection()
         name = self.selected['name']
         path = self.selected['file']
@@ -187,29 +187,20 @@ class Unicron(object):
         if bool(launchd.LaunchdJob(name).exists()):
             try:
                 subprocess.call(['launchctl', 'unload', '%s' % path], cwd='/', shell=False, universal_newlines=False)
-                self.populateList(self)
             except:
                 return
         else:
             try:
                 subprocess.call(['launchctl', 'load', '%s' % path], cwd='/', shell=False, universal_newlines=False)
-                self.populateList(self)
             except:
                 return
-                
+
+        self.populateList(self)
+
 
     def _removeDaemon(self, sender):
-        self.w.list.scrollToSelection()
-        name = self.selected['name']
-        path = self.selected['file']
-
-        if bool(launchd.LaunchdJob(name).exists()):
-            try:
-                subprocess.call(['launchctl', 'unload', '%s' % path], cwd='/', shell=False, universal_newlines=False)
-                subprocess.call(['launchctl', 'remove', '%s' % path], cwd='/', shell=False, universal_newlines=False)
-                self.populateList(self)
-            except:
-                return
+        self._loadUnloadDaemon(self, 'unload')
+        self._loadUnloadDaemon(self, 'remove')
 
 
     def _selectionCallback(self, sender):
@@ -257,14 +248,16 @@ class Unicron(object):
 
     def _menuCallback(self, sender):
         items = []
-        if self.selected['status'] == None:
-            load = 'Load'
-            items.append(dict(title=load, callback=self._loadUnloadDaemon))
-        else:
-            load = 'Unload'
-            items.append(dict(title=load, callback=self._loadUnloadDaemon))
-            items.append(dict(title="Remove", callback=self._removeDaemon))
 
+        if self.selected['status'] == None:
+            load, able = 'Load', 'Enable'
+        else:
+            load, able = 'Unload', 'Disable'
+
+        loadCallback = partial(self._loadUnloadDaemon, command=load)
+        ableCallback = partial(self._loadUnloadDaemon, command=able)
+        items.append(dict(title=load, callback=loadCallback))
+        items.append(dict(title=able, callback=ableCallback))
         items.append(dict(title="Show in Finder", callback=self._showInFinder))
         items.append(dict(title="Refresh list", callback=self.populateList))
 
