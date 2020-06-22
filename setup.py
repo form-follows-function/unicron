@@ -2,11 +2,13 @@ from distutils.core import setup
 import py2app
 import os
 
+version = '0.0.1'
+
 plist = dict(
     CFBundleIdentifier="de.nelsonfritsch.unicron",
     LSMinimumSystemVersion="10.12.6",
-    CFBundleShortVersionString="0.0.1",
-    CFBundleVersion="0.0.1",
+    CFBundleShortVersionString=version,
+    CFBundleVersion=version,
 )
 
 dataFiles = [

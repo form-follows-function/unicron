@@ -16,7 +16,6 @@ class Unicron(object):
                           'Global Daemons', 'System Agents', 'System Daemons']
         self.listItems = []
         self.selected = {}
-        self.daemon = None
 
         # Preferences
         self.homedir = os.path.expanduser('~')
@@ -84,8 +83,8 @@ class Unicron(object):
         self.populateList(self)
         self.w.rowIndicator = Group((0, 0, 0, 10))
 
-        self.w.bind('move', self.windowMoved)
-        self.w.bind('resize', self.windowMoved)
+        self.w.bind('move', self._windowMoved)
+        self.w.bind('resize', self._windowMoved)
         self.w.setPosSize(self.prefs.get('windowPosSize'))
 
         self.prefsSetStyle(self)
@@ -97,23 +96,19 @@ class Unicron(object):
         style = self.prefsWindow.style.getItem()
         self._changePref(self, 'windowStyle', style)
 
-        # if self.prefs.get('windowStyle'):
         if style == 'System':
             style = NSUserDefaults.standardUserDefaults().stringForKey_('AppleInterfaceStyle')
-        if style == 'Dark':                
-            appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantDark')
+        if style == 'Dark':
+            winAppearance = 'NSAppearanceNameVibrantDark'
         else:
-            appearance = NSAppearance.appearanceNamed_('NSAppearanceNameVibrantLight')
+            winAppearance = 'NSAppearanceNameVibrantLight'
+        appearance = NSAppearance.appearanceNamed_(winAppearance)
         self.w._window.setAppearance_(appearance)
         self.prefsWindow._window.setAppearance_(appearance)
 
 
     def prefsRestoreWarnings(self, sender):
         self._changePref(self, 'showSystemWarning', True)
-
-
-    def windowMoved(self, sender):
-        self._changePref(self, 'windowPosSize', self.w.getPosSize())
 
 
     def populateList(self, sender):
@@ -154,9 +149,7 @@ class Unicron(object):
             count = 0
 
             for file in files:
-                if not '.plist' in file:
-                    files.remove(file)
-                else:
+                if file.endswith('.plist'):
                     file = file.replace('.plist', '')
                     try:
                         pid = launchd.LaunchdJob(file).pid
@@ -174,6 +167,10 @@ class Unicron(object):
                     self.w.list.append(thisItem)
                     count += 1
             self.w.counter.set(str(count) + ' Jobs')
+
+
+    def _windowMoved(self, sender):
+        self._changePref(self, 'windowPosSize', self.w.getPosSize())
 
 
     def _showInFinder(self, sender):
@@ -233,7 +230,7 @@ class Unicron(object):
                     import getpass
                     username = getpass.getuser()
                     user = username
-                    path = 'Users/%s/Library/Launch' % username
+                    path = '/Users/%s/Library/Launch' % username
                 elif 'Global' in item:
                     user = 'All users'
                     path = '/Library/Launch'

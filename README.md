@@ -59,12 +59,6 @@ $ `python3 debug.py`
 
 
 ## Roadmap
-
-- [x] Grouping and listing daemons by user or system
-- [x] Displaying the daemon's status
-- [x] Loading and unloading daemons
-- [x] Revealing the selected daemon in the Finder
-- [x] Removing Daemons from recurring services
 - [ ] Displaying an application icon
    - [ ] Easteregg
 - [ ] Providing builds (no GitHub CI/CD) with md5 checksum
@@ -74,7 +68,14 @@ $ `python3 debug.py`
   - [ ] Scheduling
   - [ ] Advanced settings
 - [ ] Creation of custom daemons
-- [ ] UX improvements (ongoing)
+- [x] UX improvements (ongoing)
+
+##### Done
+- [x] Grouping and listing daemons by user or system
+- [x] Displaying the daemon's status
+- [x] Loading and unloading daemons
+- [x] Revealing the selected daemon in the Finder
+- [x] Removing Daemons from recurring services
 
 ##### Deprecated
 - [x] ~~Refactor the code to use QT as GUI library~~
