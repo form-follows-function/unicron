@@ -16,7 +16,6 @@ class Unicron(object):
                           'Global Daemons', 'System Agents', 'System Daemons']
         self.listItems = []
         self.selected = {}
-        self.daemon = None
 
         # Preferences
         self.homedir = os.path.expanduser('~')
@@ -230,7 +229,7 @@ class Unicron(object):
                     import getpass
                     username = getpass.getuser()
                     user = username
-                    path = 'Users/%s/Library/Launch' % username
+                    path = '/Users/%s/Library/Launch' % username
                 elif 'Global' in item:
                     user = 'All users'
                     path = '/Library/Launch'
