@@ -16,7 +16,6 @@ class Unicron(object):
                           'Global Daemons', 'System Agents', 'System Daemons']
         self.listItems = []
         self.selected = {}
-        self.daemon = None
 
         # Preferences
         self.homedir = os.path.expanduser('~')
