@@ -84,8 +84,8 @@ class Unicron(object):
         self.populateList(self)
         self.w.rowIndicator = Group((0, 0, 0, 10))
 
-        self.w.bind('move', self.windowMoved)
-        self.w.bind('resize', self.windowMoved)
+        self.w.bind('move', self._windowMoved)
+        self.w.bind('resize', self._windowMoved)
         self.w.setPosSize(self.prefs.get('windowPosSize'))
 
         self.prefsSetStyle(self)
@@ -110,10 +110,6 @@ class Unicron(object):
 
     def prefsRestoreWarnings(self, sender):
         self._changePref(self, 'showSystemWarning', True)
-
-
-    def windowMoved(self, sender):
-        self._changePref(self, 'windowPosSize', self.w.getPosSize())
 
 
     def populateList(self, sender):
@@ -172,6 +168,10 @@ class Unicron(object):
                     self.w.list.append(thisItem)
                     count += 1
             self.w.counter.set(str(count) + ' Jobs')
+
+
+    def _windowMoved(self, sender):
+        self._changePref(self, 'windowPosSize', self.w.getPosSize())
 
 
     def _showInFinder(self, sender):
