@@ -68,6 +68,7 @@ $ `python3 debug.py`
 - [ ] Displaying an application icon
    - [ ] Easteregg
 - [ ] Providing builds (no GitHub CI/CD) with md5 checksum
+- [ ] Add documentation
 - [x] UX improvements (ongoing)
 
 ##### Done
