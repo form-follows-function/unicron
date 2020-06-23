@@ -69,7 +69,9 @@ $ `python3 debug.py`
    - [ ] Easteregg
 - [ ] Providing builds (no GitHub CI/CD) with md5 checksum
 - [ ] Add documentation
-- [x] UX improvements (ongoing)
+
+## Ongoing
+- [x] UX improvements 
 
 ##### Done
 - [x] Grouping and listing daemons by user or system
