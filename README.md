@@ -59,6 +59,7 @@ $ `python3 debug.py`
 
 
 ## Roadmap
+##### Curent Targets
 - [ ] Modifying existing daemons such as:
   - [ ] Name and Label
   - [ ] Program
@@ -70,7 +71,7 @@ $ `python3 debug.py`
 - [ ] Providing builds (no GitHub CI/CD) with md5 checksum
 - [ ] Add documentation
 
-## Ongoing
+##### Ongoing
 - [x] UX improvements 
 
 ##### Done
