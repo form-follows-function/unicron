@@ -59,16 +59,19 @@ $ `python3 debug.py`
 
 
 ## Roadmap
-- [ ] Displaying an application icon
-   - [ ] Easteregg
-- [ ] Providing builds (no GitHub CI/CD) with md5 checksum
 - [ ] Modifying existing daemons such as:
   - [ ] Name and Label
   - [ ] Program
   - [ ] Scheduling
   - [ ] Advanced settings
 - [ ] Creation of custom daemons
-- [x] UX improvements (ongoing)
+- [ ] Displaying an application icon
+   - [ ] Easteregg
+- [ ] Providing builds (no GitHub CI/CD) with md5 checksum
+- [ ] Add documentation
+
+## Ongoing
+- [x] UX improvements 
 
 ##### Done
 - [x] Grouping and listing daemons by user or system
