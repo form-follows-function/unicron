@@ -59,29 +59,8 @@ $ `python3 debug.py`
 
 
 ## Roadmap
-- [ ] Modifying existing daemons such as:
-  - [ ] Name and Label
-  - [ ] Program
-  - [ ] Scheduling
-  - [ ] Advanced settings
-- [ ] Creation of custom daemons
-- [ ] Displaying an application icon
-   - [ ] Easteregg
-- [ ] Providing builds (no GitHub CI/CD) with md5 checksum
-- [ ] Add documentation
 
-## Ongoing
-- [x] UX improvements 
-
-##### Done
-- [x] Grouping and listing daemons by user or system
-- [x] Displaying the daemon's status
-- [x] Loading and unloading daemons
-- [x] Revealing the selected daemon in the Finder
-- [x] Removing Daemons from recurring services
-
-##### Deprecated
-- [x] ~~Refactor the code to use QT as GUI library~~
+The roadmap can be found at the [Kanban board](https://github.com/form-follows-function/unicron/projects/1)
 
 
 
