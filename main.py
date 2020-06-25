@@ -7,7 +7,8 @@ import math, os, subprocess, launchd, plistlib
 from functools import partial
 from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSAppearance
 from Foundation import NSUserDefaults
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover
+from Quartz import NSEvent
 
 
 class Unicron(object):
@@ -242,6 +243,26 @@ class Unicron(object):
                 else:
                     status = 'Available'
                 self.selected['status'] = status
+                pop = Popover((300, 500))
+                pop.title = TextBox("auto", self.selected['name'])
+                pop.save = Button("auto", "Save")
+                rules = [
+                    # Horizontal
+                    "H:|-[title]-|",
+                    "H:|-[save]-|",
+                    # Vertical
+                    "V:|-[title]-[save]-|",
+                ]
+                metrics = {
+                    "border" : 10,
+                    "space" : 8
+                }
+                
+                mousePos = int(NSEvent.mouseLocation()[1])
+                self.w.rowIndicator.setPosSize((0, mousePos, 0, self.rowHeight))
+                
+                pop.addAutoPosSizeRules(rules, metrics)
+                pop.open(parentView=sender.getNSTableView(), preferredEdge='right')
         except:
             pass
    
