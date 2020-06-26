@@ -54,7 +54,7 @@ $  `python3 setup.py py2app`
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
 
-$ `python3 debug.py`
+$ `python3 test.py`
 
 
 
