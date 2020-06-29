@@ -66,6 +66,12 @@ The roadmap can be found at the [Kanban board](https://github.com/form-follows-f
 
 ## Background information
 
+$  `man launchctl`
+
+$  `man launchd`
+
+$  `man launchd.plist`
+
 - https://docs.chef.io/resource_launchd.html
 - http://www.launchd.info
 - http://launched.zerowidth.com
