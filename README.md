@@ -72,7 +72,6 @@ $  `man launchd`
 
 $  `man launchd.plist`
 
-- https://docs.chef.io/resource_launchd.html
 - http://www.launchd.info
 - http://launched.zerowidth.com
 
