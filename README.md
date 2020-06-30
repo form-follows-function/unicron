@@ -60,17 +60,7 @@ $ `python3 test.py`
 
 ## Roadmap
 
-##### Done
-- [x] Grouping and listing daemons by user or system
-- [x] Displaying the daemon's status
-- [x] Loading and unloading daemons
-- [x] Revealing the selected daemon in the Finder
-- [x] Removing Daemons from recurring services
-
-##### Deprecated
-- [x] ~~Refactor the code to use QT as GUI library~~
 The roadmap can be found at the [Kanban board](https://github.com/form-follows-function/unicron/projects/1)
-
 
 
 ## Background information
