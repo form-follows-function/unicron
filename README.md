@@ -54,25 +54,11 @@ $  `python3 setup.py py2app`
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
 
-$ `python3 debug.py`
+$ `python3 test.py`
 
 
 
 ## Roadmap
-##### Curent Targets
-- [ ] Modifying existing daemons such as:
-  - [ ] Name and Label
-  - [ ] Program
-  - [ ] Scheduling
-  - [ ] Advanced settings
-- [ ] Creation of custom daemons
-- [ ] Displaying an application icon
-   - [ ] Easteregg
-- [ ] Providing builds (no GitHub CI/CD) with md5 checksum
-- [ ] Add documentation
-
-##### Ongoing
-- [x] UX improvements 
 
 ##### Done
 - [x] Grouping and listing daemons by user or system
@@ -83,12 +69,18 @@ $ `python3 debug.py`
 
 ##### Deprecated
 - [x] ~~Refactor the code to use QT as GUI library~~
+The roadmap can be found at the [Kanban board](https://github.com/form-follows-function/unicron/projects/1)
 
 
 
 ## Background information
 
-- https://docs.chef.io/resource_launchd.html
+$  `man launchctl`
+
+$  `man launchd`
+
+$  `man launchd.plist`
+
 - http://www.launchd.info
 - http://launched.zerowidth.com
 
