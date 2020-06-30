@@ -5,7 +5,7 @@ from __future__ import print_function
 
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSAppearance
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver
 from Foundation import NSUserDefaults
 from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton
 
@@ -48,12 +48,34 @@ class Unicron(object):
         self.pathList = NSPopUpButton.alloc().initWithFrame_(((0, 0), (160, 20)))
         self.pathList.addItemsWithTitles_(self.locations)
 
+        refreshIcon = NSImage.alloc().initWithSize_((32, 32))
+        sourceImage = NSImage.imageNamed_(NSImageNameRefreshTemplate)
+
+        w, h = sourceImage.size()
+
+        if w > h:
+            diffx = 0
+            diffy = w - h
+        else:
+            diffx = h - w
+            diffy = 0
+
+        maxSize = max([w, h])
+        refreshIcon.lockFocus()
+        sourceImage.drawInRect_fromRect_operation_fraction_(NSMakeRect(diffx, diffy+4, 22, 22), NSMakeRect(0, 0, maxSize, maxSize), NSCompositeSourceOver, 1)
+        refreshIcon.unlockFocus()
+        refreshIcon.setTemplate_(True)
+
         toolbarItems = [
-            {"itemIdentifier": "Daemons",
-             "label": "Daemons",
-             "toolTip": "Daemon Group",
-             "view": self.pathList,
-             "callback": self.populateList},
+            dict(itemIdentifier="Daemons",
+                label="Daemons",
+                toolTip="Daemon Group",
+                view=self.pathList,
+                callback=self.populateList),
+            dict(itemIdentifier="image",
+                label="Image",
+                imageObject=refreshIcon,
+                callback=self.populateList),
         ]
         self.w.addToolbar("Unicron Toolbar", toolbarItems=toolbarItems, displayMode="icon")
 
