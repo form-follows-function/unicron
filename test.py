@@ -19,13 +19,6 @@ import objc
 objc.setVerbose(True)
 vanillaPath = os.path.realpath(vanilla.__file__)
 vanillaPath = os.path.dirname(os.path.dirname(os.path.dirname(vanillaPath)))
-iconPath = os.path.join(vanillaPath, "Data", "testIcon.tif")
-iconName = None
-
-if not os.path.exists(iconPath):
-    iconPath = None
-    iconName = NSImageNameInfo
-
 
 class Test(object):
     def __init__(self):
