@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+from pprint import pprint
 
 import math, os, subprocess, launchd, plistlib
 from functools import partial
