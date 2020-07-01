@@ -265,29 +265,15 @@ class Unicron(object):
                 else:
                     status = 'Available'
                 self.selected['status'] = status
+
+                index = sender.getSelection()[0]
+                relativeRect = sender.getNSTableView().rectOfRow_(index)
+                
                 pop = Popover((300, 500))
-                pop.title = TextBox("auto", self.selected['name'])
-                pop.save = Button("auto", "Save")
-                rules = [
-                    # Horizontal
-                    "H:|-[title]-|",
-                    "H:|-[save]-|",
-                    # Vertical
-                    "V:|-[title]-[save]-|",
-                ]
-                metrics = {
-                    "border" : 10,
-                    "space" : 8
-                }
-                
-                mousePos = int(NSEvent.mouseLocation()[1])
-                self.w.rowIndicator.setPosSize((0, mousePos, 0, self.rowHeight))
-                
-                pop.addAutoPosSizeRules(rules, metrics)
-                pop.open(parentView=sender.getNSTableView(), preferredEdge='right')
+                pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
-   
+
 
     def _menuCallback(self, sender):
         items = []
