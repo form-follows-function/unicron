@@ -5,9 +5,9 @@ from pprint import pprint
 
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor
 from Foundation import NSUserDefaults
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, Box
 from Quartz import NSEvent
 
 
@@ -258,7 +258,9 @@ class Unicron(object):
 
                 self.selected['path'] = path
                 self.selected['file'] = str(self.selected['path'].replace(' ', '\ ')) + job['name'].replace(' ', '\ ') + '.plist'
-                
+                f = open(self.selected['file'], "r")
+                self.selected['raw'] = str(f.read())
+
                 # Get status
                 if job['image'] == NSImage.imageNamed_(NSImageNameStatusNone):
                     status = None
@@ -268,8 +270,20 @@ class Unicron(object):
 
                 index = sender.getSelection()[0]
                 relativeRect = sender.getNSTableView().rectOfRow_(index)
-                
+
                 pop = Popover((300, 500))
+
+                # Wrapping NSTabView into NSBox is a quick hack to have it draw no background
+                pop.box = Box((0, 0, 0, 0))
+
+                pop.box.tabs = Tabs((0, 10, -0, -0), ["Editor", "Raw View"])
+
+                edit = pop.box.tabs[0]
+                edit.title = TextBox((0, 0, -0, -0), self.selected['name'])
+
+                rawEdit = pop.box.tabs[1]
+                rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
+
                 pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
