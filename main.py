@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+from pprint import pprint
 
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor
+from Foundation import NSUserDefaults
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, Box
+from Quartz import NSEvent
 
 
 class Unicron(object):
@@ -15,7 +17,6 @@ class Unicron(object):
                           'Global Daemons', 'System Agents', 'System Daemons']
         self.listItems = []
         self.selected = {}
-        self.daemon = None
 
         # Preferences
         self.homedir = os.path.expanduser('~')
@@ -27,22 +28,55 @@ class Unicron(object):
         else:
             self.prefs = dict(
                 showSystemWarning = True,
+                windowPosSize = (100.0, 100.0, 250.0, 400.0),
+                windowStyle = 'System'
             )
             self._savePrefs(self)
 
-        # WINDOW SETUP
+        # Preferences Window
+        self.prefsWindow = Window((300, 105), 'Preferences')
+
+        self.styles = ['System', 'Light', 'Dark']
+        self.prefsWindow.styleTxt = TextBox((10, 10, -10, 20), "Window Style:")
+        self.prefsWindow.style = PopUpButton((30, 35, -10, 20), self.styles, callback=self.prefsSetStyle)
+
+        self.prefsWindow.restore = Button((10, 75, -10, 20), 'Restore Warnings', callback=self.prefsRestoreWarnings)
+
+        # Main Window
         self.w = Window((250, 400), 'Unicron',
                         closable=True, fullSizeContentView=True, titleVisible=False, minSize=(160, 320), maxSize=(600, 1200))
 
         self.pathList = NSPopUpButton.alloc().initWithFrame_(((0, 0), (160, 20)))
         self.pathList.addItemsWithTitles_(self.locations)
 
+        refreshIcon = NSImage.alloc().initWithSize_((32, 32))
+        sourceImage = NSImage.imageNamed_(NSImageNameRefreshTemplate)
+
+        w, h = sourceImage.size()
+
+        if w > h:
+            diffx = 0
+            diffy = w - h
+        else:
+            diffx = h - w
+            diffy = 0
+
+        maxSize = max([w, h])
+        refreshIcon.lockFocus()
+        sourceImage.drawInRect_fromRect_operation_fraction_(NSMakeRect(diffx, diffy+4, 22, 22), NSMakeRect(0, 0, maxSize, maxSize), NSCompositeSourceOver, 1)
+        refreshIcon.unlockFocus()
+        refreshIcon.setTemplate_(True)
+
         toolbarItems = [
-            {"itemIdentifier": "Daemons",
-             "label": "Daemons",
-             "toolTip": "Daemon Group",
-             "view": self.pathList,
-             "callback": self.populateList},
+            dict(itemIdentifier="Daemons",
+                label="Daemons",
+                toolTip="Daemon Group",
+                view=self.pathList,
+                callback=self.populateList),
+            dict(itemIdentifier="image",
+                label="Image",
+                imageObject=refreshIcon,
+                callback=self.populateList),
         ]
         self.w.addToolbar("Unicron Toolbar", toolbarItems=toolbarItems, displayMode="icon")
 
@@ -70,10 +104,34 @@ class Unicron(object):
         
         self.w.counter = TextBox((16, -20, -16, 15), '', alignment='center', sizeStyle='small')
         self.populateList(self)
-
         self.w.rowIndicator = Group((0, 0, 0, 10))
 
+        self.w.bind('move', self._windowMoved)
+        self.w.bind('resize', self._windowMoved)
+        self.w.setPosSize(self.prefs.get('windowPosSize'))
+
+        self.prefsSetStyle(self)
+        
         self.w.open()
+
+
+    def prefsSetStyle(self, sender):
+        style = self.prefsWindow.style.getItem()
+        self._changePref(self, 'windowStyle', style)
+
+        if style == 'System':
+            style = NSUserDefaults.standardUserDefaults().stringForKey_('AppleInterfaceStyle')
+        if style == 'Dark':
+            winAppearance = 'NSAppearanceNameVibrantDark'
+        else:
+            winAppearance = 'NSAppearanceNameVibrantLight'
+        appearance = NSAppearance.appearanceNamed_(winAppearance)
+        self.w._window.setAppearance_(appearance)
+        self.prefsWindow._window.setAppearance_(appearance)
+
+
+    def prefsRestoreWarnings(self, sender):
+        self._changePref(self, 'showSystemWarning', True)
 
 
     def populateList(self, sender):
@@ -114,9 +172,7 @@ class Unicron(object):
             count = 0
 
             for file in files:
-                if not '.plist' in file:
-                    files.remove(file)
-                else:
+                if file.endswith('.plist'):
                     file = file.replace('.plist', '')
                     try:
                         pid = launchd.LaunchdJob(file).pid
@@ -136,13 +192,17 @@ class Unicron(object):
             self.w.counter.set(str(count) + ' Jobs')
 
 
+    def _windowMoved(self, sender):
+        self._changePref(self, 'windowPosSize', self.w.getPosSize())
+
+
     def _showInFinder(self, sender):
         file = self.selected['file']
         subprocess.call(['open', '-R', '%s' % file], cwd='/',
                         shell=False, universal_newlines=False)
 
 
-    def _loadUnloadDaemon(self, sender):
+    def _loadUnloadDaemon(self, sender, command):
         self.w.list.scrollToSelection()
         name = self.selected['name']
         path = self.selected['file']
@@ -150,29 +210,20 @@ class Unicron(object):
         if bool(launchd.LaunchdJob(name).exists()):
             try:
                 subprocess.call(['launchctl', 'unload', '%s' % path], cwd='/', shell=False, universal_newlines=False)
-                self.populateList(self)
             except:
                 return
         else:
             try:
                 subprocess.call(['launchctl', 'load', '%s' % path], cwd='/', shell=False, universal_newlines=False)
-                self.populateList(self)
             except:
                 return
-                
+
+        self.populateList(self)
+
 
     def _removeDaemon(self, sender):
-        self.w.list.scrollToSelection()
-        name = self.selected['name']
-        path = self.selected['file']
-
-        if bool(launchd.LaunchdJob(name).exists()):
-            try:
-                subprocess.call(['launchctl', 'unload', '%s' % path], cwd='/', shell=False, universal_newlines=False)
-                subprocess.call(['launchctl', 'remove', '%s' % path], cwd='/', shell=False, universal_newlines=False)
-                self.populateList(self)
-            except:
-                return
+        self._loadUnloadDaemon(self, 'unload')
+        self._loadUnloadDaemon(self, 'remove')
 
 
     def _selectionCallback(self, sender):
@@ -193,7 +244,7 @@ class Unicron(object):
                     import getpass
                     username = getpass.getuser()
                     user = username
-                    path = 'Users/%s/Library/Launch' % username
+                    path = '/Users/%s/Library/Launch' % username
                 elif 'Global' in item:
                     user = 'All users'
                     path = '/Library/Launch'
@@ -207,29 +258,51 @@ class Unicron(object):
 
                 self.selected['path'] = path
                 self.selected['file'] = str(self.selected['path'].replace(' ', '\ ')) + job['name'].replace(' ', '\ ') + '.plist'
-                
+                f = open(self.selected['file'], "r")
+                self.selected['raw'] = str(f.read())
+
                 # Get status
                 if job['image'] == NSImage.imageNamed_(NSImageNameStatusNone):
                     status = None
                 else:
                     status = 'Available'
                 self.selected['status'] = status
+
+                index = sender.getSelection()[0]
+                relativeRect = sender.getNSTableView().rectOfRow_(index)
+
+                pop = Popover((300, 500))
+
+                # Wrapping NSTabView into NSBox is a quick hack to have it draw no background
+                pop.box = Box((0, 0, 0, 0))
+
+                pop.box.tabs = Tabs((0, 10, -0, -0), ["Editor", "Raw View"])
+
+                edit = pop.box.tabs[0]
+                edit.title = TextBox((0, 0, -0, -0), self.selected['name'])
+
+                rawEdit = pop.box.tabs[1]
+                rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
+
+                pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
-   
+
 
     def _menuCallback(self, sender):
         items = []
-        if self.selected['status'] == None:
-            load = 'Load'
-            items.append(dict(title=load, callback=self._loadUnloadDaemon))
-        else:
-            load = 'Unload'
-            items.append(dict(title=load, callback=self._loadUnloadDaemon))
-            items.append(dict(title="Remove", callback=self._removeDaemon))
 
-        items.append(dict(title="Refresh list", callback=self.populateList))
+        if self.selected['status'] == None:
+            load, able = 'Load', 'Enable'
+        else:
+            load, able = 'Unload', 'Disable'
+
+        loadCallback = partial(self._loadUnloadDaemon, command=load)
+        ableCallback = partial(self._loadUnloadDaemon, command=able)
+        items.append(dict(title=load, callback=loadCallback))
+        items.append(dict(title=able, callback=ableCallback))
         items.append(dict(title="Show in Finder", callback=self._showInFinder))
+        items.append(dict(title="Refresh list", callback=self.populateList))
 
         return items
 
