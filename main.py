@@ -5,9 +5,9 @@ from pprint import pprint
 
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder
 from Foundation import NSUserDefaults
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, Box
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
 from Quartz import NSEvent
 
 
@@ -271,22 +271,28 @@ class Unicron(object):
                 index = sender.getSelection()[0]
                 relativeRect = sender.getNSTableView().rectOfRow_(index)
 
-                pop = Popover((300, 500))
+                self.pop = Popover((300, 500))
 
-                # Wrapping NSTabView into NSBox is a quick hack to have it draw no background
-                pop.box = Box((0, 0, 0, 0))
+                self.pop.tabs = Tabs((20, 40, -20, -20), ["Editor", "Raw View"])
+                self.pop.tabs._nsObject.setTabViewType_(NSNoTabsNoBorder)
 
-                pop.box.tabs = Tabs((0, 10, -0, -0), ["Editor", "Raw View"])
+                self.pop.tabBtn = SegmentedButton((10, 10, -10, 20),
+                    [dict(title="Editor"), dict(title="Raw View")],
+                    callback=self._segmentPressed, selectionStyle='one')
 
-                edit = pop.box.tabs[0]
-                edit.title = TextBox((0, 0, -0, -0), self.selected['name'])
+                self.edit = self.pop.tabs[0]
+                self.edit.title = TextBox((0, 0, -0, -0), self.selected['name'])
 
-                rawEdit = pop.box.tabs[1]
-                rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
+                self.rawEdit = self.pop.tabs[1]
+                self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
 
-                pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
+                self.pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
+
+
+    def _segmentPressed(self, sender):
+        self.pop.tabs.set(self.pop.tabBtn.get())
 
 
     def _menuCallback(self, sender):
