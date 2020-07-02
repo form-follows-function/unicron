@@ -1,13 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+from pprint import pprint
 
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder
 from Foundation import NSUserDefaults
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
+from Quartz import NSEvent
 
 
 class Unicron(object):
@@ -257,20 +258,50 @@ class Unicron(object):
 
                 self.selected['path'] = path
                 self.selected['file'] = str(self.selected['path'].replace(' ', '\ ')) + job['name'].replace(' ', '\ ') + '.plist'
-                
+                f = open(self.selected['file'], "r")
+                self.selected['raw'] = str(f.read())
+
                 # Get status
                 if job['image'] == NSImage.imageNamed_(NSImageNameStatusNone):
                     status = None
                 else:
                     status = 'Available'
                 self.selected['status'] = status
+
+                index = sender.getSelection()[0]
+                relativeRect = sender.getNSTableView().rectOfRow_(index)
+
+                self.pop = Popover((300, 500))
+
+                self.pop.tabs = Tabs((20, 40, -20, -20), ["Editor", "Raw View"])
+                self.pop.tabs._nsObject.setTabViewType_(NSNoTabsNoBorder)
+
+                self.pop.tabBtn = SegmentedButton((10, 10, -10, 20),
+                    [dict(title="Editor"), dict(title="Raw View")],
+                    callback=self._segmentPressed, selectionStyle='one')
+                self.pop.tabBtn.set(0)
+
+                self.edit = self.pop.tabs[0]
+                self.edit.title = TextBox((0, 0, -0, -0), self.selected['name'], alignment='center')
+
+                self.rawEdit = self.pop.tabs[1]
+                self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
+
+                self.pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
-   
+
+
+    def _segmentPressed(self, sender):
+        self.pop.tabs.set(self.pop.tabBtn.get())
+
 
     def _menuCallback(self, sender):
         items = []
 
+        shortName = (self.selected['name'][:42] + '…') if len(self.selected['name']) > 42 else self.selected['name']
+        items.append(dict(title=shortName, enabled=False))
+        items.append("----")
         if self.selected['status'] == None:
             load, able = 'Load', 'Enable'
         else:
