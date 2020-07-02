@@ -299,6 +299,9 @@ class Unicron(object):
     def _menuCallback(self, sender):
         items = []
 
+        shortName = (self.selected['name'][:42] + '…') if len(self.selected['name']) > 42 else self.selected['name']
+        items.append(dict(title=shortName, enabled=False))
+        items.append("----")
         if self.selected['status'] == None:
             load, able = 'Load', 'Enable'
         else:
