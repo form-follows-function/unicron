@@ -279,9 +279,10 @@ class Unicron(object):
                 self.pop.tabBtn = SegmentedButton((10, 10, -10, 20),
                     [dict(title="Editor"), dict(title="Raw View")],
                     callback=self._segmentPressed, selectionStyle='one')
+                self.pop.tabBtn.set(0)
 
                 self.edit = self.pop.tabs[0]
-                self.edit.title = TextBox((0, 0, -0, -0), self.selected['name'])
+                self.edit.title = TextBox((0, 0, -0, -0), self.selected['name'], alignment='center')
 
                 self.rawEdit = self.pop.tabs[1]
                 self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
