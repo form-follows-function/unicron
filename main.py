@@ -1,13 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+from pprint import pprint
 
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSAppearance
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder
 from Foundation import NSUserDefaults
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
+from Quartz import NSEvent
 
 
 class Unicron(object):
@@ -48,12 +49,34 @@ class Unicron(object):
         self.pathList = NSPopUpButton.alloc().initWithFrame_(((0, 0), (160, 20)))
         self.pathList.addItemsWithTitles_(self.locations)
 
+        refreshIcon = NSImage.alloc().initWithSize_((32, 32))
+        sourceImage = NSImage.imageNamed_(NSImageNameRefreshTemplate)
+
+        w, h = sourceImage.size()
+
+        if w > h:
+            diffx = 0
+            diffy = w - h
+        else:
+            diffx = h - w
+            diffy = 0
+
+        maxSize = max([w, h])
+        refreshIcon.lockFocus()
+        sourceImage.drawInRect_fromRect_operation_fraction_(NSMakeRect(diffx, diffy+4, 22, 22), NSMakeRect(0, 0, maxSize, maxSize), NSCompositeSourceOver, 1)
+        refreshIcon.unlockFocus()
+        refreshIcon.setTemplate_(True)
+
         toolbarItems = [
-            {"itemIdentifier": "Daemons",
-             "label": "Daemons",
-             "toolTip": "Daemon Group",
-             "view": self.pathList,
-             "callback": self.populateList},
+            dict(itemIdentifier="Daemons",
+                label="Daemons",
+                toolTip="Daemon Group",
+                view=self.pathList,
+                callback=self.populateList),
+            dict(itemIdentifier="image",
+                label="Image",
+                imageObject=refreshIcon,
+                callback=self.populateList),
         ]
         self.w.addToolbar("Unicron Toolbar", toolbarItems=toolbarItems, displayMode="icon")
 
@@ -235,16 +258,43 @@ class Unicron(object):
 
                 self.selected['path'] = path
                 self.selected['file'] = str(self.selected['path'].replace(' ', '\ ')) + job['name'].replace(' ', '\ ') + '.plist'
-                
+                f = open(self.selected['file'], "r")
+                self.selected['raw'] = str(f.read())
+
                 # Get status
                 if job['image'] == NSImage.imageNamed_(NSImageNameStatusNone):
                     status = None
                 else:
                     status = 'Available'
                 self.selected['status'] = status
+
+                index = sender.getSelection()[0]
+                relativeRect = sender.getNSTableView().rectOfRow_(index)
+
+                self.pop = Popover((300, 500))
+
+                self.pop.tabs = Tabs((20, 40, -20, -20), ["Editor", "Raw View"])
+                self.pop.tabs._nsObject.setTabViewType_(NSNoTabsNoBorder)
+
+                self.pop.tabBtn = SegmentedButton((10, 10, -10, 20),
+                    [dict(title="Editor"), dict(title="Raw View")],
+                    callback=self._segmentPressed, selectionStyle='one')
+                self.pop.tabBtn.set(0)
+
+                self.edit = self.pop.tabs[0]
+                self.edit.title = TextBox((0, 0, -0, -0), self.selected['name'], alignment='center')
+
+                self.rawEdit = self.pop.tabs[1]
+                self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
+
+                self.pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
-   
+
+
+    def _segmentPressed(self, sender):
+        self.pop.tabs.set(self.pop.tabBtn.get())
+
 
     def _menuCallback(self, sender):
         items = []

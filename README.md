@@ -5,7 +5,7 @@
 
 ## Unicron is an interactive utility to help manage and edit background processes on macOS. Enhancing automation and security. 
 
-### These processes are called daemons, agents and jobs, or crons within the Unix world. Apple deprecated the Unix crontab process in MacOSX 10.4 Tiger and replaced it with the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to handle background processes, strengthens security and simplifies repeating tasks.
+### Background processes are called daemons, agents and jobs, or crons within the Unix world. Apple deprecated the Unix crontab process in MacOSX 10.4 Tiger and replaced it with the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to these handle background processes, strengthens security and simplifies repeating tasks.
 
 
 
@@ -54,37 +54,23 @@ $  `python3 setup.py py2app`
 
 The vanilla tools allow to run the app for testing without any compilation needed. Simply run:
 
-$ `python3 debug.py`
+$ `python3 test.py`
 
 
 
 ## Roadmap
-- [ ] Displaying an application icon
-   - [ ] Easteregg
-- [ ] Providing builds (no GitHub CI/CD) with md5 checksum
-- [ ] Modifying existing daemons such as:
-  - [ ] Name and Label
-  - [ ] Program
-  - [ ] Scheduling
-  - [ ] Advanced settings
-- [ ] Creation of custom daemons
-- [x] UX improvements (ongoing)
 
-##### Done
-- [x] Grouping and listing daemons by user or system
-- [x] Displaying the daemon's status
-- [x] Loading and unloading daemons
-- [x] Revealing the selected daemon in the Finder
-- [x] Removing Daemons from recurring services
-
-##### Deprecated
-- [x] ~~Refactor the code to use QT as GUI library~~
-
+The roadmap can be found at the [Kanban board](https://github.com/form-follows-function/unicron/projects/1)
 
 
 ## Background information
 
-- https://docs.chef.io/resource_launchd.html
+$  `man launchctl`
+
+$  `man launchd`
+
+$  `man launchd.plist`
+
 - http://www.launchd.info
 - http://launched.zerowidth.com
 
