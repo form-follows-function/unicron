@@ -287,6 +287,7 @@ class Unicron(object):
                 self.rawEdit = self.pop.tabs[1]
                 self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
 
+                self.pop.save = Button((20, -50, -20, 40), "Save", callback=None)
                 self.pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
