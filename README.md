@@ -5,7 +5,7 @@
 
 ## Unicron is an interactive utility to help manage and edit background processes on macOS. Enhancing automation and security. 
 
-### Background processes are called daemons, agents and jobs, or crons within the Unix world. Apple deprecated the Unix crontab process in MacOSX 10.4 Tiger and replaced it with the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to these handle background processes, strengthens security and simplifies repeating tasks.
+### Background processes are called daemons, agents and jobs, or crons within the Unix world. Apple deprecated the Unix crontab process in MacOS X 10.4 Tiger and replaced it with the system's launchd process. They work on different user levels such as the current user, administrator or system. Unicron aims to these handle background processes, strengthens security and simplifies repeating tasks.
 
 
 
