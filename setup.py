@@ -16,6 +16,11 @@ dataFiles = [
 ]
 
 setup(
+    version=version,
+    description="Unicron is an interactive utility to help manage and edit background processes on macOS. Enhancing automation and security.",
+    author="Nelson Sylvest*r Fritsch",
+    url="https://github.com/form-follows-function/unicron/",
+    license="GPL",
     data_files=dataFiles,
     app=[dict(script="Unicron.py", plist=plist)]
 )
