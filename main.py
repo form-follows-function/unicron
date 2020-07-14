@@ -288,7 +288,7 @@ class Unicron(object):
                 self.edit.title = TextBox((0, 10, -0, -0), self.selected['short'], alignment='center')
 
                 self.rawEdit = self.pop.tabs[1]
-                self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
+                self.rawEdit.editor = TextEditor((0, 0, -0, -50), text=self.selected['raw'])
 
                 # TODO: add scrollview for value groups
 
