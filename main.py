@@ -2,14 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from pprint import pprint
-
 import math, os, subprocess, launchd, plistlib
 from functools import partial
 from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder
 from Foundation import NSUserDefaults
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
 from Quartz import NSEvent
-
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
 
 class Unicron(object):
     def __init__(self):
@@ -260,7 +258,7 @@ class Unicron(object):
                 self.selected['file'] = str(self.selected['path'].replace(' ', '\ ')) + job['name'].replace(' ', '\ ') + '.plist'
                 f = open(self.selected['file'], "r")
                 self.selected['raw'] = str(f.read())
-
+                self.selected['short'] = (self.selected['name'][:32] + '…') if len(self.selected['name']) > 32 else self.selected['name']
                 # Get status
                 if job['image'] == NSImage.imageNamed_(NSImageNameStatusNone):
                     status = None
@@ -282,14 +280,19 @@ class Unicron(object):
                 self.pop.tabBtn.set(0)
 
                 self.edit = self.pop.tabs[0]
-                self.edit.title = TextBox((0, 0, -0, -0), self.selected['name'], alignment='center')
+                self.edit.title = TextBox((0, 10, -0, -0), self.selected['short'], alignment='center')
 
                 self.rawEdit = self.pop.tabs[1]
                 self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
 
+                self.pop.save = Button((20, -50, -20, 40), "Save", callback=self._savePlist)
                 self.pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
+
+    # TODO
+    def _savePlist(self, sender):
+        return
 
 
     def _segmentPressed(self, sender):
@@ -299,8 +302,7 @@ class Unicron(object):
     def _menuCallback(self, sender):
         items = []
 
-        shortName = (self.selected['name'][:42] + '…') if len(self.selected['name']) > 42 else self.selected['name']
-        items.append(dict(title=shortName, enabled=False))
+        items.append(dict(title=self.selected['short'], enabled=False))
         items.append("----")
         if self.selected['status'] == None:
             load, able = 'Load', 'Enable'
