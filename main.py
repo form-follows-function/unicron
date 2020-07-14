@@ -4,9 +4,7 @@
 from pprint import pprint
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder
-from Foundation import NSUserDefaults
-from Quartz import NSEvent
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder, NSUserDefaults, NSPasteboard, NSArray
 from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
 
 class Unicron(object):
@@ -299,11 +297,19 @@ class Unicron(object):
         self.pop.tabs.set(self.pop.tabBtn.get())
 
 
+    def _copyName(self, sender, name):
+        pb = NSPasteboard.generalPasteboard()
+        pb.clearContents()
+        arr = NSArray.arrayWithObject_(name)
+        pb.writeObjects_(arr)
+
+
     def _menuCallback(self, sender):
         items = []
 
         items.append(dict(title=self.selected['short'], enabled=False))
         items.append("----")
+
         if self.selected['status'] == None:
             load, able = 'Load', 'Enable'
         else:
@@ -313,7 +319,12 @@ class Unicron(object):
         ableCallback = partial(self._loadUnloadDaemon, command=able)
         items.append(dict(title=load, callback=loadCallback))
         items.append(dict(title=able, callback=ableCallback))
+
+        items.append("----")
+        copyCallback = partial(self._copyName, name=self.selected['name'])
+        items.append(dict(title='Copy Name', callback=copyCallback))
         items.append(dict(title="Show in Finder", callback=self._showInFinder))
+        items.append("----")
         items.append(dict(title="Refresh list", callback=self.populateList))
 
         return items
