@@ -6,11 +6,18 @@ import math, os, subprocess, launchd, plistlib
 from functools import partial
 from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder, NSUserDefaults, NSPasteboard, NSArray
 from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
+from ui.valueGroup import ValueGroup
+
 
 class Unicron(object):
     def __init__(self):
-        self.locations = ['User Agents', 'Global Agents',
-                          'Global Daemons', 'System Agents', 'System Daemons']
+        self.locations = [
+                            'User Agents',
+                            'Global Agents',
+                            'Global Daemons',
+                            'System Agents',
+                            'System Daemons'
+                            ]
         self.listItems = []
         self.selected = {}
 
@@ -97,7 +104,7 @@ class Unicron(object):
 
         self.w.statusbar = Group((0, -26, 0, 0), blendingMode='behindWindow')
         self.w.statusbar.border = HorizontalLine((0, 0, 0, 1))
-        
+
         self.w.counter = TextBox((16, -20, -16, 15), '', alignment='center', sizeStyle='small')
         self.populateList(self)
         self.w.rowIndicator = Group((0, 0, 0, 10))
@@ -107,7 +114,7 @@ class Unicron(object):
         self.w.setPosSize(self.prefs.get('windowPosSize'))
 
         self.prefsSetStyle(self)
-        
+
         self.w.open()
 
 
@@ -283,12 +290,21 @@ class Unicron(object):
                 self.rawEdit = self.pop.tabs[1]
                 self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
 
+                # TODO: add scrollview for value groups
+
+                self.selected['dict'] = launchd.plist.read(self.selected['name'])
+                # TODO: iterate over plist values an add it's respective UI group
+                for idx, (key, value) in enumerate(self.selected['dict'].items()):
+                    group = ValueGroup((0, 40 + (70 * idx), -0, 140), key=key, value=value)
+                    setattr(self.edit, key, group)
+
                 self.pop.save = Button((20, -50, -20, 40), "Save", callback=self._savePlist)
                 self.pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
 
-    # TODO
+
+    # TODO: get values from UI, create new dict and save it into plist
     def _savePlist(self, sender):
         return
 
@@ -362,7 +378,7 @@ class Unicron(object):
             self.w.list.enable(False)
             self.warning.open()
 
-    
+
     def _closeWarning(self, sender):
         self.warning.close()
         self.w.list.enable(True)

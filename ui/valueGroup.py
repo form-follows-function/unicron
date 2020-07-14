@@ -17,6 +17,7 @@ class ValueGroup(Group):
         self.description = TextBox((0, 10, -0, 20), str(self.key))
 
         if isinstance(value, dict):
+            # TODO: handle nested dicts in plists in UI
             pass
         elif isinstance(self.value, str) or isinstance(value, int):
             self.edit = EditText((20, 35, -0, 20),
