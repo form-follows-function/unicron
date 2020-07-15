@@ -1,6 +1,6 @@
 from AppKit import NSView, NSNoBorder
 from vanilla.vanillaBase import VanillaBaseObject, osVersionCurrent, osVersion10_10
-from vanilla import Group, TextBox, Button, EditText, CheckBox, HorizontalLine, List
+from vanilla import Group, TextBox, Button, EditText, CheckBox, HorizontalLine, List, HelpButton
 from AppKit import NSVisualEffectView
 
 class ValueGroup(Group):
@@ -21,15 +21,16 @@ class ValueGroup(Group):
             # TODO: handle nested dicts in plists in UI
             pass
         elif isinstance(self.value, str) or isinstance(value, int):
-            self.edit = EditText((20, 35, -0, 20),
+            self.edit = EditText((12, 40, -0, 20),
                             text=self.value,
                             callback=self.dummyCallback)
+        # TODO: for some reasons bool types are correctly passed, but not accepted by isinstace() in this case
         elif isinstance(self.value, bool):
-            self.check = CheckBox((20, 35, -0, 20), "A CheckBox",
+            self.check = CheckBox((15, 40, -0, 20), key,
                             callback=self.dummyCallback, 
                             value=self.value)
         elif isinstance(self.value, list):               
-            self.list = List((20, 35, -0, 50), items=self.value,
+            self.list = List((15, 40, -0, 20), items=self.value,
                                     columnDescriptions=None,
                                     showColumnTitles=False,
                                     allowsEmptySelection=False,
@@ -38,6 +39,9 @@ class ValueGroup(Group):
                                     drawFocusRing=False)
 
             self.list._nsObject.setBorderType_(NSNoBorder)
+
+        # TODO: Parse launchd man pages for key and show documenation
+        self.help = HelpButton((-21, 10, -0, 20), callback=self.dummyCallback)
 
     def dummyCallback(self, sender):
         pass
