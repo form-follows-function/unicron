@@ -7,8 +7,9 @@ class ValueGroup(Group):
     nsViewClass = NSView
     nsVisualEffectViewClass = NSVisualEffectView
 
-    def __init__(self, posSize, blenderMode=None, key=None, value=None):
+    def __init__(self, sender, posSize, blenderMode=None, key=None, value=None):
         super().__init__(posSize)
+        self.sender = sender
         self._setupView(self.nsViewClass, posSize)
         self.key, self.value = key, value
 
