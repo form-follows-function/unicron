@@ -7,10 +7,10 @@ class ValueGroup(Group):
     nsViewClass = NSView
     nsVisualEffectViewClass = NSVisualEffectView
 
-    def __init__(self, sender, posSize, blenderMode=None, key=None, value=None):
+    def __init__(self, posSize, blenderMode=None, key=None, value=None):
         super().__init__(posSize)
-        self.sender = sender
         self._setupView(self.nsViewClass, posSize)
+        # self.sender = sender
         self.key, self.value = key, value
 
         self.separator = HorizontalLine((0, 0, -0, 1))
@@ -18,13 +18,11 @@ class ValueGroup(Group):
         self.description = TextBox((0, 10, -0, 20), str(self.key))
 
         if isinstance(value, dict):
-            # TODO: handle nested dicts in plists in UI
             pass
-        elif isinstance(self.value, str) or isinstance(value, int):
+        elif isinstance(self.value, str) or (isinstance(value, int) and not isinstance(value, bool)):
             self.edit = EditText((12, 40, -0, 20),
                             text=self.value,
                             callback=self.dummyCallback)
-        # TODO: for some reasons bool types are correctly passed, but not accepted by isinstace() in this case
         elif isinstance(self.value, bool):
             self.check = CheckBox((15, 40, -0, 20), key,
                             callback=self.dummyCallback, 
@@ -42,6 +40,7 @@ class ValueGroup(Group):
 
         # TODO: Parse launchd man pages for key and show documenation
         self.help = HelpButton((-21, 10, -0, 20), callback=self.dummyCallback)
+
 
     def dummyCallback(self, sender):
         pass
