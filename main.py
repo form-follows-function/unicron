@@ -4,20 +4,17 @@
 from pprint import pprint
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder, NSUserDefaults, NSPasteboard, NSArray
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder
+from Foundation import NSUserDefaults
+from Quartz import NSEvent
 from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
-from ui.valueGroup import ValueGroup
 
+from ui.valueGroup import ValueGroup
 
 class Unicron(object):
     def __init__(self):
-        self.locations = [
-                            'User Agents',
-                            'Global Agents',
-                            'Global Daemons',
-                            'System Agents',
-                            'System Daemons'
-                            ]
+        self.locations = ['User Agents', 'Global Agents',
+                          'Global Daemons', 'System Agents', 'System Daemons']
         self.listItems = []
         self.selected = {}
 
@@ -104,7 +101,7 @@ class Unicron(object):
 
         self.w.statusbar = Group((0, -26, 0, 0), blendingMode='behindWindow')
         self.w.statusbar.border = HorizontalLine((0, 0, 0, 1))
-
+        
         self.w.counter = TextBox((16, -20, -16, 15), '', alignment='center', sizeStyle='small')
         self.populateList(self)
         self.w.rowIndicator = Group((0, 0, 0, 10))
@@ -114,7 +111,7 @@ class Unicron(object):
         self.w.setPosSize(self.prefs.get('windowPosSize'))
 
         self.prefsSetStyle(self)
-
+        
         self.w.open()
 
 
@@ -288,14 +285,12 @@ class Unicron(object):
                 self.edit.title = TextBox((0, 10, -0, -0), self.selected['short'], alignment='center')
 
                 self.rawEdit = self.pop.tabs[1]
-                self.rawEdit.editor = TextEditor((0, 0, -0, -50), text=self.selected['raw'])
-
-                # TODO: add scrollview for value groups
+                self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
 
                 self.selected['dict'] = launchd.plist.read(self.selected['name'])
                 # TODO: iterate over plist values an add it's respective UI group
                 for idx, (key, value) in enumerate(self.selected['dict'].items()):
-                    group = ValueGroup((0, 40 + (70 * idx), -0, 140), key=key, value=value)
+                    group = ValueGroup((0, (70 * idx), -0, 140), key=key, value=value)
                     setattr(self.edit, key, group)
 
                 self.pop.save = Button((20, -50, -20, 40), "Save", callback=self._savePlist)
@@ -303,8 +298,7 @@ class Unicron(object):
         except:
             pass
 
-
-    # TODO: get values from UI, create new dict and save it into plist
+    # TODO
     def _savePlist(self, sender):
         return
 
@@ -313,19 +307,11 @@ class Unicron(object):
         self.pop.tabs.set(self.pop.tabBtn.get())
 
 
-    def _copyName(self, sender, name):
-        pb = NSPasteboard.generalPasteboard()
-        pb.clearContents()
-        arr = NSArray.arrayWithObject_(name)
-        pb.writeObjects_(arr)
-
-
     def _menuCallback(self, sender):
         items = []
 
         items.append(dict(title=self.selected['short'], enabled=False))
         items.append("----")
-
         if self.selected['status'] == None:
             load, able = 'Load', 'Enable'
         else:
@@ -335,12 +321,7 @@ class Unicron(object):
         ableCallback = partial(self._loadUnloadDaemon, command=able)
         items.append(dict(title=load, callback=loadCallback))
         items.append(dict(title=able, callback=ableCallback))
-
-        items.append("----")
-        copyCallback = partial(self._copyName, name=self.selected['name'])
-        items.append(dict(title='Copy Name', callback=copyCallback))
         items.append(dict(title="Show in Finder", callback=self._showInFinder))
-        items.append("----")
         items.append(dict(title="Refresh list", callback=self.populateList))
 
         return items
@@ -378,7 +359,7 @@ class Unicron(object):
             self.w.list.enable(False)
             self.warning.open()
 
-
+    
     def _closeWarning(self, sender):
         self.warning.close()
         self.w.list.enable(True)
