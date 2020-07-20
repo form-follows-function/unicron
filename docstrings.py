@@ -17,11 +17,12 @@ docstring = {
         'type': '',
         'description': 
             "The presence of this key specifies that the daemon expects to be run as if it were launched from inetd. For new projects, this key should be avoided.",
-        "values": {
-            "Wait"
+        'values': {
+            'Wait': {
                 'type': '',
                 'description': 
                     """This flag corresponds to the "wait" or "nowait" option of inetd. If true, then the listening socket is passed via the stdio file descriptors. If false, then accept is called on behalf of the job, and the result is passed via the stdio descriptors."""
+            },
         },
     },
     'LimitLoadToHosts': {            
