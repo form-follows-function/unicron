@@ -4,13 +4,16 @@
 from pprint import pprint
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder,NSUserDefaults, NSView, NSEvent
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder,NSUserDefaults, NSView, NSEvent, NSObject
 
 from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton, VerticalStackGroup
 
 from ui.valueGroup import ValueGroup
 
-
+class UnicronAppDelegate(NSObject):
+    def applicationDidFinishLaunching_(self, notification):
+        Unicron()
+        
 class Unicron(object):
     def __init__(self):
         self.locations = ['User Agents', 'Global Agents',
