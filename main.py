@@ -31,7 +31,6 @@ class Unicron(object):
         else:
             self.prefs = dict(
                 showSystemWarning = True,
-                windowPosSize = (100.0, 100.0, 250.0, 400.0),
                 windowStyle = 'System'
             )
             self._savePrefs(self)
@@ -47,8 +46,14 @@ class Unicron(object):
 
         # Main Window
         minsize = 285
-        self.w = Window((minsize, 400), 'Unicron',
-                        closable=True, fullSizeContentView=True, titleVisible=False, minSize=(minsize, minsize), maxSize=(600, 1200))
+        self.w = Window((minsize, 400), 
+                        'Unicron',
+                        closable=True,
+                        fullSizeContentView=True,
+                        titleVisible=False,
+                        minSize=(minsize, minsize),
+                        maxSize=(600, 1200),
+                        autosaveName="UnicronMainWindow")
 
         self.pathList = NSPopUpButton.alloc().initWithFrame_(((0, 0), (160, 20)))
         self.pathList.addItemsWithTitles_(self.locations)
@@ -109,10 +114,6 @@ class Unicron(object):
         self.w.counter = TextBox((16, -20, -16, 15), '', alignment='center', sizeStyle='small')
         self.populateList(self)
         self.w.rowIndicator = Group((0, 0, 0, 10))
-
-        self.w.bind('move', self._windowMoved)
-        self.w.bind('resize', self._windowMoved)
-        self.w.setPosSize(self.prefs.get('windowPosSize'))
 
         self.prefsSetStyle(self)
         
@@ -194,10 +195,6 @@ class Unicron(object):
                     self.w.list.append(thisItem)
                     count += 1
             self.w.counter.set(str(count) + ' Jobs')
-
-
-    def _windowMoved(self, sender):
-        self._changePref(self, 'windowPosSize', self.w.getPosSize())
 
 
     def _showInFinder(self, sender):
