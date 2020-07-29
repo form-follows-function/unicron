@@ -4,15 +4,20 @@
 from pprint import pprint
 import math, os, subprocess, launchd, plistlib
 from functools import partial
-from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder
-from Foundation import NSUserDefaults
-from Quartz import NSEvent
-from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton
+from AppKit import NSImageNameInfo, NSPopUpButton, NSNoBorder, NSAppearance, NSImage, NSImageNameStatusPartiallyAvailable, NSImageNameStatusNone, NSImageNameStatusAvailable, NSImageNameCaution, NSImageNameRefreshTemplate, NSMakeRect, NSCompositeSourceOver, NSColor, NSNoTabsNoBorder,NSUserDefaults, NSView, NSEvent, NSObject
 
+from vanilla import Window, Group, ImageListCell, List, HorizontalLine, TextBox, Sheet, ImageView, Button, CheckBox, PopUpButton, Popover, Tabs, TextEditor, SegmentedButton, VerticalStackGroup
+
+from ui.valueGroup import ValueGroup
+
+class UnicronAppDelegate(NSObject):
+    def applicationDidFinishLaunching_(self, notification):
+        Unicron()
+        
 class Unicron(object):
     def __init__(self):
         self.locations = ['User Agents', 'Global Agents',
-                          'Global Daemons', 'System Agents', 'System Daemons']
+                        'Global Daemons', 'System Agents', 'System Daemons']
         self.listItems = []
         self.selected = {}
 
@@ -26,7 +31,6 @@ class Unicron(object):
         else:
             self.prefs = dict(
                 showSystemWarning = True,
-                windowPosSize = (100.0, 100.0, 250.0, 400.0),
                 windowStyle = 'System'
             )
             self._savePrefs(self)
@@ -41,8 +45,15 @@ class Unicron(object):
         self.prefsWindow.restore = Button((10, 75, -10, 20), 'Restore Warnings', callback=self.prefsRestoreWarnings)
 
         # Main Window
-        self.w = Window((250, 400), 'Unicron',
-                        closable=True, fullSizeContentView=True, titleVisible=False, minSize=(160, 320), maxSize=(600, 1200))
+        minsize = 285
+        self.w = Window((minsize, 400), 
+                        'Unicron',
+                        closable=True,
+                        fullSizeContentView=True,
+                        titleVisible=False,
+                        minSize=(minsize, minsize),
+                        maxSize=(600, 1200),
+                        autosaveName="UnicronMainWindow")
 
         self.pathList = NSPopUpButton.alloc().initWithFrame_(((0, 0), (160, 20)))
         self.pathList.addItemsWithTitles_(self.locations)
@@ -103,10 +114,6 @@ class Unicron(object):
         self.w.counter = TextBox((16, -20, -16, 15), '', alignment='center', sizeStyle='small')
         self.populateList(self)
         self.w.rowIndicator = Group((0, 0, 0, 10))
-
-        self.w.bind('move', self._windowMoved)
-        self.w.bind('resize', self._windowMoved)
-        self.w.setPosSize(self.prefs.get('windowPosSize'))
 
         self.prefsSetStyle(self)
         
@@ -190,10 +197,6 @@ class Unicron(object):
             self.w.counter.set(str(count) + ' Jobs')
 
 
-    def _windowMoved(self, sender):
-        self._changePref(self, 'windowPosSize', self.w.getPosSize())
-
-
     def _showInFinder(self, sender):
         file = self.selected['file']
         subprocess.call(['open', '-R', '%s' % file], cwd='/',
@@ -224,6 +227,8 @@ class Unicron(object):
         self._loadUnloadDaemon(self, 'remove')
 
 
+    # def addGroup(self, sender, key, value):
+
     def _selectionCallback(self, sender):
         try:
             if not self.w.list.getSelection():
@@ -234,7 +239,7 @@ class Unicron(object):
                 self.selected.clear()
                 job = sender.get()[self.w.list.getSelection()[0]]
                 self.selected['name'] = job['name']
-                
+                self.valueGroups = []
                 # Get job path and file location
                 item = self.pathList.titleOfSelectedItem()
 
@@ -269,7 +274,7 @@ class Unicron(object):
                 index = sender.getSelection()[0]
                 relativeRect = sender.getNSTableView().rectOfRow_(index)
 
-                self.pop = Popover((300, 500))
+                self.pop = Popover((300, 100))
 
                 self.pop.tabs = Tabs((20, 40, -20, -20), ["Editor", "Raw View"])
                 self.pop.tabs._nsObject.setTabViewType_(NSNoTabsNoBorder)
@@ -280,12 +285,23 @@ class Unicron(object):
                 self.pop.tabBtn.set(0)
 
                 self.edit = self.pop.tabs[0]
-                self.edit.title = TextBox((0, 10, -0, -0), self.selected['short'], alignment='center')
 
                 self.rawEdit = self.pop.tabs[1]
-                self.rawEdit.editor = TextEditor((0, 0, -0, -0), text=self.selected['raw'])
+                self.rawEdit.editor = TextEditor((0, 0, -0, -45), text=self.selected['raw'])
+
+                self.selected['dict'] = launchd.plist.read(self.selected['name'])
+
+                # TODO: Add stackview to scrollview as group
+                # Waiting for merge into master: https://github.com/robotools/vanilla/issues/132
+                self.edit.stack = VerticalStackGroup((0, 0, -0, -45))
+
+                for idx, (key, value) in enumerate(sorted(self.selected['dict'].items())):
+                    group = ValueGroup((0, 0, -0, -0), sender=self, key=key, value=value, idx=idx)
+                    self.valueGroups.append(group)
+                    self.edit.stack.addView(self.valueGroups[idx], 300, self.valueGroups[idx].getPosSize()[3])
 
                 self.pop.save = Button((20, -50, -20, 40), "Save", callback=self._savePlist)
+                self.pop.save.enable(False)
                 self.pop.open(parentView=sender.getNSTableView(), preferredEdge='right', relativeRect=relativeRect)
         except:
             pass
